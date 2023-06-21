@@ -1,3 +1,9 @@
+import { Container } from "../styles/global";
+
 export function Success() {
-  return <h1>Success</h1>;
+  return (
+    <Container>
+      <h1>Success</h1>
+    </Container>
+  );
 }

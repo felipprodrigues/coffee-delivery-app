@@ -1,3 +1,9 @@
+import { Container } from "../styles/global";
+
 export function Checkout() {
-  return <h1>checkout</h1>;
+  return (
+    <Container>
+      <h1>checkout</h1>
+    </Container>
+  );
 }

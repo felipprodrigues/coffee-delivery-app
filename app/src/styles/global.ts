@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -19,9 +19,27 @@ export const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: auto;
   }
 
-  body, input, textarea, button {
+  input,
+  textarea,
+  button,
+  span,
+  p,
+  a {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-size: 1rem;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Baloo 2', cursive;
+  }
+`;
+
+export const Container = styled.div`
+  padding: 2.5rem 0;
 `;
