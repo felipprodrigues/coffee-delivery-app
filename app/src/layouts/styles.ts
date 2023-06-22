@@ -17,4 +17,8 @@ export const LayoutContainer = styled.div`
     max-width: calc(100% - 20rem);
   }
   max-width: calc(100% - 6rem);
+
+  div#footer {
+    padding: 2rem;
+  }
 `;

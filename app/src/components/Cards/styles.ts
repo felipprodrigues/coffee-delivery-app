@@ -36,20 +36,6 @@ export const Card = styled.div`
       filter: brightness(0.8);
     }
   }
-
-  div span {
-    display: flex;
-    align-items: center;
-    gap: 0.15rem;
-
-    font-size: ${(props) => props.theme["font-m"]};
-    color: ${(props) => props.theme["base-700"]};
-
-    h2 {
-      font-size: ${(props) => props.theme["title-m"]};
-      color: ${(props) => props.theme["base-700"]};
-    }
-  }
 `;
 
 export const CardTitle = styled.div`
@@ -76,7 +62,7 @@ export const CardTitle = styled.div`
 export const CardSelectAmount = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
 
   padding: 0.5rem;
   border-radius: 6px;
@@ -84,6 +70,7 @@ export const CardSelectAmount = styled.div`
 
   svg {
     color: ${(props) => props.theme["secondary-500"]};
+    cursor: pointer;
   }
 `;
 
@@ -91,10 +78,51 @@ export const CardImage = styled.div`
   padding: 2rem 0;
   position: relative;
   justify-content: center;
+  height: 100px;
 
   img {
     position: absolute;
 
-    top: -55%;
+    top: -35%;
+  }
+`;
+
+export const CardTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0 0.5rem;
+
+  div#label {
+    background-color: ${(props) => props.theme["primary-100"]};
+    padding: 0.25rem;
+    border-radius: 6px;
+    gap: 0.25rem;
+
+    span {
+      font-size: ${(props) => props.theme["font-xxs"]};
+      color: ${(props) => props.theme["primary-500"]};
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+`;
+
+export const CardFooter = styled.div`
+  display: flex;
+  gap: 0.75rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+
+    font-size: ${(props) => props.theme["font-m"]};
+    color: ${(props) => props.theme["base-700"]};
+
+    h2 {
+      font-size: ${(props) => props.theme["title-m"]};
+      color: ${(props) => props.theme["base-700"]};
+    }
   }
 `;
