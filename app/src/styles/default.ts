@@ -4,6 +4,7 @@ export const defaultTheme = {
   "font-m": "16px",
   "font-s": "14px",
   "font-xs": "12px",
+  "font-xxs": "10px",
 
   "title-xl": "48px",
   "title-l": "32px",

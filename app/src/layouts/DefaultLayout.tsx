@@ -9,6 +9,8 @@ export function DefaultLayout() {
         <Header />
 
         <Outlet />
+
+        <div id="footer"></div>
       </LayoutContainer>
     </div>
   );
