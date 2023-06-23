@@ -23,7 +23,6 @@ import moccacino from "../../assets/moccacino.png";
 import macchiato from "../../assets/macchiato.png";
 import cafeComLeite from "../../assets/comLeite.png";
 import { v4 as uuidv4 } from "uuid";
-import { uuid } from "uuidv4";
 
 interface CardProps {
   id: string;

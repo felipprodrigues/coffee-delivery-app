@@ -31,6 +31,40 @@ export const CardBlock = styled.div`
       }
     }
   }
+
+  form {
+    padding: 2rem 0 0;
+    display: grid;
+
+    grid-gap: 1rem;
+
+    input {
+      border-radius: 6px;
+      border: none;
+      padding: 0.75rem;
+      background-color: ${(props) => props.theme["base-300"]};
+      color: ${(props) => props.theme["base-600"]};
+      font-size: ${(props) => props.theme["font-s"]};
+    }
+
+    input:first-of-type {
+      max-width: 200px;
+      width: 100%;
+    }
+
+    div {
+      display: grid;
+      grid-gap: 1rem;
+    }
+
+    div:first-of-type {
+      grid-template-columns: 200px auto;
+    }
+
+    div:last-of-type {
+      grid-template-columns: 200px auto 60px;
+    }
+  }
 `;
 
 export const CardPaymentMethod = styled.div`
@@ -40,7 +74,7 @@ export const CardPaymentMethod = styled.div`
   gap: 1rem;
 `;
 
-export const PaymentButton = styled.div`
+export const PaymentButton = styled.label`
   display: flex;
   align-items: center;
 
@@ -65,4 +99,14 @@ export const PaymentButton = styled.div`
   &:hover {
     filter: brightness(0.9);
   }
+
+  /* input {
+      display: none;
+    } */
+
+  /* input:checked {
+    outline: none !important;
+    border: 1px solid red;
+    box-shadow: 0 0 10px #719ece;
+  } */
 `;
