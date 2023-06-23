@@ -2,6 +2,8 @@ import { HeaderContainer, HeaderLabel } from "./styles";
 
 import Logo from "../../assets/Logo.png";
 import { MapPin, ShoppingCart } from "phosphor-react";
+import { Link, NavLink } from "react-router-dom";
+import { Success } from "../../pages/Success";
 
 export function Header() {
   return (
@@ -15,7 +17,9 @@ export function Header() {
         </HeaderLabel>
 
         <HeaderLabel>
-          <ShoppingCart size={24} />
+          <NavLink to="/checkout" title="Checkout">
+            <ShoppingCart size={24} />
+          </NavLink>
         </HeaderLabel>
       </div>
     </HeaderContainer>
