@@ -8,7 +8,9 @@ import { Success } from "../../pages/Success";
 export function Header() {
   return (
     <HeaderContainer>
-      <img src={Logo} />
+      <NavLink to="/">
+        <img src={Logo} />
+      </NavLink>
 
       <div>
         <HeaderLabel>
@@ -16,11 +18,11 @@ export function Header() {
           <span>Bauru, SP</span>
         </HeaderLabel>
 
-        <HeaderLabel>
-          <NavLink to="/checkout" title="Checkout">
+        <NavLink to="/checkout" title="Checkout">
+          <HeaderLabel>
             <ShoppingCart size={24} />
-          </NavLink>
-        </HeaderLabel>
+          </HeaderLabel>
+        </NavLink>
       </div>
     </HeaderContainer>
   );

@@ -2,7 +2,12 @@ import { Main } from "../components/CheckoutCards/styles";
 import { Container } from "../styles/global";
 
 import SuccessIllustration from "../assets/successIllustrations.png";
-import { SuccessCard, SuccessSteps } from "../components/Success/styles";
+import {
+  SuccessCard,
+  SuccessHolder,
+  SuccessImageHolder,
+  SuccessSteps,
+} from "../components/Success/styles";
 import { ReactElement } from "react";
 import { CurrencyDollar, MapPin, Timer } from "phosphor-react";
 
@@ -34,7 +39,7 @@ export function Success() {
   return (
     <Container>
       <Main>
-        <div>
+        <SuccessHolder>
           <span>
             <h1>Uhu! Pedido Confirmado</h1>
             Agora é só aguardar que logo o café chegará até você
@@ -61,11 +66,11 @@ export function Success() {
               })}
             </div>
           </SuccessCard>
-        </div>
+        </SuccessHolder>
 
-        <div>
+        <SuccessImageHolder>
           <img src={SuccessIllustration} />
-        </div>
+        </SuccessImageHolder>
       </Main>
     </Container>
   );

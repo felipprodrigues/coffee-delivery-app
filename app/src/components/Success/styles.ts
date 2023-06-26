@@ -1,8 +1,21 @@
 import styled from "styled-components";
 
+export const SuccessHolder = styled.div`
+  & > span {
+    font-size: ${(props) => props.theme["font-l"]};
+    color: ${(props) => props.theme["base-800"]};
+  }
+
+  & > span > h1 {
+    color: ${(props) => props.theme["primary-500"]};
+    font-size: ${(props) => props.theme["title-l"]};
+  }
+`;
+
 export const SuccessCard = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 2rem;
   padding: 2px;
 
   border-radius: 6px 36px 6px 36px;
@@ -10,9 +23,9 @@ export const SuccessCard = styled.div`
 
   position: relative;
   background: linear-gradient(
-    to left,
+    to right,
     ${(props) => props.theme["primary-100"]},
-    #d53a9d
+    ${(props) => props.theme["secondary-100"]}
   );
 
   & > div {
@@ -22,7 +35,7 @@ export const SuccessCard = styled.div`
 
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
   }
 `;
 
@@ -46,5 +59,15 @@ export const SuccessSteps = styled.div`
   & > div:last-of-type {
     display: flex;
     flex-direction: column;
+
+    & > span {
+      font-size: ${(props) => props.theme["font-m"]};
+      color: ${(props) => props.theme["base-700"]};
+    }
   }
+`;
+
+export const SuccessImageHolder = styled.div`
+  display: flex;
+  align-items: flex-end;
 `;
