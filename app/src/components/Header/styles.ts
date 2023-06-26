@@ -26,6 +26,7 @@ export const HeaderLabel = styled.div`
   gap: 0.25rem;
   border-radius: 6px;
   transition: all 0.07s linear;
+  position: relative;
 
   &:first-child {
     background-color: ${(props) => props.theme["secondary-100"]};
@@ -43,4 +44,22 @@ export const HeaderLabel = styled.div`
   &:last-child:hover {
     background-color: ${(props) => props.theme.primary};
   }
+`;
+
+export const HeaderShoppingCartCounter = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+
+  background-color: ${(props) => props.theme["primary-500"]};
+  color: ${(props) => props.theme.white};
+  font-size: ${(props) => props.theme["font-s"]};
+
+  top: -30%;
+  right: -30%;
 `;
