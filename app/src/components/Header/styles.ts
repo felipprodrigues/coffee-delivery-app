@@ -9,6 +9,14 @@ export const HeaderContainer = styled.header`
     display: flex;
     gap: 1.5rem;
   }
+
+  & > a > img {
+    transition: all 0.15s linear;
+  }
+
+  & > a > img:hover {
+    transform: scale(0.9);
+  }
 `;
 
 export const HeaderLabel = styled.div`
