@@ -13,45 +13,49 @@ import { cardData } from "../../Cards/constants";
 import { Minus, Plus, Trash } from "phosphor-react";
 import { CardSelectAmount } from "../../Cards/styles";
 import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "../../../App";
 
 export function CheckoutCard() {
+  const { cartItems, removeItemFromCart } = useContext(CartContext);
+
   return (
     <Card>
       <h3>Cafés selecionados</h3>
 
       <CardBlock>
         <CardCheckout>
-          {cardData.map((item) => {
+          {cartItems.map((item) => {
             return (
               <>
-                {item.title === "Expresso Tradicional" ||
-                item.title === "Latte" ? (
-                  <CardCheckoutItem>
-                    <img src={item.image} />
+                <CardCheckoutItem>
+                  <img src={item.image} />
 
-                    <CardQuantityHolder>
-                      <span>{item.title}</span>
-
-                      <div>
-                        <CardSelectAmount>
-                          <Minus size={16} />
-                          <span>0</span>
-                          <Plus size={16} />
-                        </CardSelectAmount>
-
-                        <CardSelectAmount>
-                          <Trash />
-
-                          <span>REMOVER</span>
-                        </CardSelectAmount>
-                      </div>
-                    </CardQuantityHolder>
+                  <CardQuantityHolder>
+                    <span>{item.title}</span>
 
                     <div>
-                      <span>R$ {item.price}</span>
+                      <CardSelectAmount>
+                        <Minus size={16} />
+                        <span>{item.amount}</span>
+                        <Plus size={16} />
+                      </CardSelectAmount>
+
+                      <CardSelectAmount
+                        isButton
+                        isSmall
+                        onClick={() => removeItemFromCart(item)}
+                      >
+                        <Trash />
+                        <span>REMOVER</span>
+                      </CardSelectAmount>
                     </div>
-                  </CardCheckoutItem>
-                ) : null}
+                  </CardQuantityHolder>
+
+                  <div>
+                    <span>R$ {item.price}</span>
+                  </div>
+                </CardCheckoutItem>
               </>
             );
           })}

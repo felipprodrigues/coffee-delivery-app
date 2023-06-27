@@ -11,17 +11,8 @@ import { CardProps } from "./constants";
 import { useContext } from "react";
 import { CartContext } from "../../App";
 
-// interface CartContextType {
-//   handleCart: () =>
-// }
-
-// const { handleCart } = useContext({});
-
 export function Cards() {
   const { handleCart, setCounter, counter } = useContext(CartContext);
-  // const [counter, setCounter] = useState(cardData);
-  // const [cartItems, setCartItems] = useState([]);
-  // const [cartItemsAmount, setCartItemsAmount] = useState(0);
 
   function handleIncreaseAmount(item: any) {
     setCounter((prevCardData) => {
@@ -50,21 +41,6 @@ export function Cards() {
       });
     });
   }
-
-  // function handleCart() {
-  //   setCartItems((prevState) => [{ ...prevState, counter }]);
-
-  //   console.log(counter, "aqui os itens");
-  //   const amountItems = counter.map((item) => item.amount);
-
-  //   const cartItemsAmount = amountItems.reduce((acc, curr) => {
-  //     return acc + curr;
-  //   }, 0);
-
-  //   console.log(cartItemsAmount, "aqui os itens");
-  //   setCartItemsAmount(cartItemsAmount);
-  //   console.log(cartItemsAmount);
-  // }
 
   const allCards = counter.map((card: CardProps) => {
     return (
@@ -103,8 +79,8 @@ export function Cards() {
             <Plus size={16} onClick={() => handleIncreaseAmount(card)} />
           </CardSelectAmount>
 
-          <div>
-            <ShoppingCart size={24} onClick={() => handleCart()} />
+          <div onClick={() => handleCart(card)}>
+            <ShoppingCart size={24} />
           </div>
         </CardFooter>
       </Card>
