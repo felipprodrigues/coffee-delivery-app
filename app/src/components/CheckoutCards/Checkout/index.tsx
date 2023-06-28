@@ -17,7 +17,8 @@ import { useContext } from "react";
 import { CartContext } from "../../../App";
 
 export function CheckoutCard() {
-  const { cartItems, removeItemFromCart } = useContext(CartContext);
+  const { cartItems, removeItemFromCart, handleDeliveryForm } =
+    useContext(CartContext);
 
   return (
     <Card>
@@ -26,9 +27,10 @@ export function CheckoutCard() {
       <CardBlock>
         <CardCheckout>
           {cartItems.map((item) => {
+            console.log(cartItems, "dentro do checkout");
             return (
               <>
-                <CardCheckoutItem>
+                <CardCheckoutItem key={item.title}>
                   <img src={item.image} />
 
                   <CardQuantityHolder>
@@ -76,9 +78,11 @@ export function CheckoutCard() {
           </div>
         </CheckoutAmount>
 
-        <NavLink to="/success">
-          <CheckoutButton type="button">CONFIRMAR PEDIDO</CheckoutButton>
-        </NavLink>
+        {/* <NavLink to="/success"> */}
+        <CheckoutButton onClick={() => handleDeliveryForm()} type="button">
+          CONFIRMAR PEDIDO
+        </CheckoutButton>
+        {/* </NavLink> */}
       </CardBlock>
     </Card>
   );

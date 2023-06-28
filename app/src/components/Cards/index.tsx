@@ -7,42 +7,21 @@ import {
   CardTag,
   CardTitle,
 } from "./styles";
-import { CardProps } from "./constants";
+import { CardProps, cardData } from "./constants";
 import { useContext } from "react";
 import { CartContext } from "../../App";
 
 export function Cards() {
-  const { handleCart, setCounter, counter } = useContext(CartContext);
+  const {
+    handleCart,
+    // setCounter,
+    // counter,
+    handleIncreaseAmount,
+    handleDecreaseAmount,
+    cartItem,
+  } = useContext(CartContext);
 
-  function handleIncreaseAmount(item: any) {
-    setCounter((prevCardData) => {
-      return prevCardData.map((card) => {
-        if (card.id === item.id) {
-          const draft = { ...card, amount: card.amount + 1 };
-          return draft;
-        }
-        return card;
-      });
-    });
-  }
-
-  function handleDecreaseAmount(item: any) {
-    setCounter((prevCardData) => {
-      return prevCardData.map((card) => {
-        if (card.id === item.id) {
-          if (card.amount === 0) {
-            return { ...card, amount: 0 };
-          } else {
-            const draft = { ...card, amount: card.amount - 1 };
-            return draft;
-          }
-        }
-        return card;
-      });
-    });
-  }
-
-  const allCards = counter.map((card: CardProps) => {
+  const allCards = cardData.map((card: CardProps) => {
     return (
       <Card>
         <CardImage>
