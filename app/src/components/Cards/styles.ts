@@ -62,15 +62,21 @@ export const CardTitle = styled.div`
 export const CardSelectAmount = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 
   padding: 0.5rem;
   border-radius: 6px;
   background-color: ${(props) => props.theme["base-400"]};
 
+  cursor: ${(props) => (props.isButton ? "pointer" : "")};
+
   svg {
     color: ${(props) => props.theme["secondary-500"]};
     cursor: pointer;
+  }
+
+  & > span {
+    font-size: ${(props) => (props.isSmall ? props.theme["font-xs"] : "")};
+    color: ${(props) => (props.isSmall ? props.theme["base-700"] : "")};
   }
 `;
 
