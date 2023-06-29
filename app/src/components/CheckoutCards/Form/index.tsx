@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 
@@ -11,6 +11,7 @@ import {
 } from "phosphor-react";
 import { Card } from "../styles";
 import { CardBlock, CardPaymentMethod, PaymentButton } from "./styles";
+import { CartContext } from "../../../App";
 
 interface PaymentProps {
   id: string;
@@ -19,53 +20,33 @@ interface PaymentProps {
 }
 
 export function FormCard() {
-  const [dataCep, setDataCep] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-
-  const singleId = Math.random(uuidv4() * 10000)
-    .toFixed(5)
-    .toString()
-    .split("")
-    .slice(2)
-    .join("");
+  const {
+    addressNumber,
+    setAddressNumber,
+    addressDetails,
+    setAddressDetails,
+    dataCep,
+    fetchAddress,
+    setPaymentMethod,
+  } = useContext(CartContext);
 
   const paymentMethod: PaymentProps[] = [
     {
-      id: singleId,
+      id: uuidv4(),
       icon: <CreditCard size={24} />,
       label: "cartão de crédito",
     },
     {
-      id: singleId,
+      id: uuidv4(),
       icon: <Money size={24} />,
       label: "cartão de débito",
     },
     {
-      id: singleId,
+      id: uuidv4(),
       icon: <Bank size={24} />,
       label: "dinheiro",
     },
   ];
-
-  useEffect(() => {}, [dataCep]);
-  async function fetchApi(cep: string) {
-    const header = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
-
-    const response = await axios.get(`http://cep.la/${cep}`, header);
-
-    setDataCep(() => response.data);
-    console.log(response.data);
-  }
-
-  function handlePayment(element: any) {
-    const findId = paymentMethod.filter((param) => param.id !== element.id);
-
-    console.log(findId, "aqui");
-  }
 
   return (
     <Card>
@@ -88,13 +69,13 @@ export function FormCard() {
             value={dataCep.cep}
             placeholder="CEP"
             required
-            onChange={({ target }) => fetchApi(target.value)}
+            onChange={({ target }) => fetchAddress(target.value)}
           />
 
           <input
             type="text"
-            id="cep"
-            name="cep"
+            id="streetAddress"
+            name="streetAddress"
             value={dataCep.logradouro}
             placeholder="Rua"
             disabled
@@ -103,42 +84,44 @@ export function FormCard() {
           <div>
             <input
               type="text"
-              id="cep"
-              name="cep"
-              // value={dataCep.bairro}
+              id="addressNumber"
+              name="addressNumber"
+              value={addressNumber}
               placeholder="Número"
               required
+              onChange={({ target }) => setAddressNumber(target.value)}
             />
             <input
               type="text"
-              id="cep"
-              name="cep"
-              // value={dataCep.cidade}
+              id="addressDetails"
+              name="addressDetails"
+              value={addressDetails}
               placeholder="Complemento (opcional)"
+              onChange={({ target }) => setAddressDetails(target.value)}
             />
           </div>
 
           <div>
             <input
               type="text"
-              id="cep"
-              name="cep"
+              id="neighbourhood"
+              name="neighbourhood"
               value={dataCep.bairro}
               placeholder="Bairro"
               disabled
             />
             <input
               type="text"
-              id="cep"
-              name="cep"
+              id="city"
+              name="city"
               value={dataCep.cidade}
               placeholder="Cidade"
               disabled
             />
             <input
               type="text"
-              id="cep"
-              name="cep"
+              id="state"
+              name="state"
               value={dataCep.uf}
               placeholder="UF"
               disabled
@@ -163,8 +146,9 @@ export function FormCard() {
                 {item.icon}
                 <input
                   key={item.label}
+                  name="paymentMethod"
                   type="radio"
-                  onClick={() => handlePayment(item)}
+                  onChange={() => setPaymentMethod(item.label)}
                   value={item.label}
                 />
                 <span>{item.label}</span>
