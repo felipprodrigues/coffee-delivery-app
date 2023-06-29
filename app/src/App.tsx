@@ -15,9 +15,7 @@ import axios from "axios";
 interface CartProps {
   cartItemsAmount: number;
   cartItems: CardProps[];
-  // counter: CardProps[];
   handleCart: (item: any) => void;
-  // setCounter: React.Dispatch<React.SetStateAction<CardProps[]>>;
   removeItemFromCart: (item: any) => void;
   fetchAddress: (item: any) => void;
   addressNumber: string;
@@ -31,14 +29,31 @@ interface CartProps {
   handlePayment: React.Dispatch<React.SetStateAction<string>>;
   handleIncreaseAmount: (item: any) => void;
   handleDecreaseAmount: (item: any) => void;
+  order: object[];
+  handleOrder: (item: any) => void;
+}
+
+export interface OrderProps {
+  cep: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+  logradouro: string;
+  number?: string;
+  complemento?: string;
+  metodoPagamento: string;
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
 }
 
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
-  // const [counter, setCounter] = useState<CardProps[]>(cardData);
   const [cartItemsAmount, setCartItemsAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
+  const [order, setOrder] = useState<OrderProps[]>([]);
 
   // FORM STATES
   const [dataCep, setDataCep] = useState<object[]>([]);
@@ -47,10 +62,47 @@ export function App() {
   const [paymentMethod, setPaymentMethod] = useState("");
 
   useEffect(() => {
-    // console.log(dataCep, "aqui o data cep");
-    // console.log(paymentMethod, "useEffect aqui");
-    // console.log(cartItems, "cartItems aqui aqui");
-  }, [dataCep, paymentMethod, cartItems]);
+    console.log(order, "aqui a order");
+    console.log(dataCep, "aqui a order");
+  }, [dataCep, paymentMethod, cartItems, order]);
+
+  function handleCart(item: any) {
+    const draft = cartItems.find((order) => order.id === item.id);
+    setOrder((prevState: any) => {
+      if (prevState.includes(draft)) {
+        return prevState;
+      } else {
+        return [...prevState, draft];
+      }
+    });
+
+    handleCartCounter();
+  }
+
+  function handleOrder(param: any) {
+    if (!order.length) return;
+
+    console.log(order, "aqui  a order");
+    console.log(dataCep, "recebido da função");
+    const orderData = {
+      ...order,
+      dataCep,
+    };
+    console.log(orderData, "objeto montado");
+
+    // setOrder(orderData);
+  }
+
+  function handleDeliveryForm() {
+    const newCepData = {
+      ...dataCep,
+      number: addressNumber,
+      complemento: addressDetails,
+      metodoPagamento: paymentMethod,
+    };
+
+    setDataCep(newCepData);
+  }
 
   function handleCartCounter() {
     const amountItems = cartItems.map((item) => item.amount);
@@ -60,38 +112,6 @@ export function App() {
     }, 0);
 
     setCartItemsAmount(cartTotalAmount);
-  }
-
-  function handleCart(item: any) {
-    const draft = cartItems.find((order) => order.id === item.id);
-    setCartItems((prevState: any) => {
-      if (prevState.includes(draft)) {
-        return prevState;
-      } else {
-        return [...prevState, draft];
-      }
-    });
-
-    console.log(cartItems, "aqui o  cart items depois de empurrar o draft");
-
-    handleCartCounter();
-  }
-
-  function removeItemFromCart(item: any) {
-    const draft = cartItems.filter((order) => order.id !== item.id);
-
-    setCartItems(draft);
-  }
-
-  function handleDeliveryForm() {
-    const newData = {
-      ...dataCep,
-      number: addressNumber,
-      complemento: addressDetails,
-      metodoPagamento: paymentMethod,
-    };
-
-    setDataCep(newData);
   }
 
   async function fetchAddress(cep: string) {
@@ -107,9 +127,13 @@ export function App() {
     console.log(response.data);
   }
 
-  function handleIncreaseAmount(item: any) {
-    console.log(cartItems, "antes");
+  function removeItemFromCart(item: any) {
+    const draft = order.filter((order) => order.id !== item.id);
 
+    setOrder(draft);
+  }
+
+  function handleIncreaseAmount(item: any) {
     setCartItems((prevCartItems) => {
       const updatedCartItems = prevCartItems.map((card) => {
         if (card.id === item.id) {
@@ -121,23 +145,19 @@ export function App() {
 
       return updatedCartItems;
     });
-
-    console.log(cartItems, "depois");
   }
 
   function handleDecreaseAmount(item: any) {
-    setCartItems((prevCardData) => {
-      return prevCardData.map((card) => {
-        if (card.id === item.id) {
-          if (card.amount === 0) {
-            return { ...card, amount: 0 };
-          } else {
-            const draft = { ...card, amount: card.amount - 1 };
-            return draft;
-          }
+    setCartItems((prevCartItems: any) => {
+      const updatedCartItems = prevCartItems.map((card: any) => {
+        if (card.id === item.id && card.amount > 0) {
+          const draft = { ...card, amount: card.amount - 1 };
+          return draft;
         }
         return card;
       });
+
+      return updatedCartItems;
     });
   }
 
@@ -161,6 +181,8 @@ export function App() {
           setPaymentMethod,
           handleIncreaseAmount,
           handleDecreaseAmount,
+          order,
+          handleOrder,
         }}
       >
         <BrowserRouter>

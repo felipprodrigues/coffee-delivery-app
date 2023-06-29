@@ -1,6 +1,9 @@
+//* Utils
+import { useContext } from "react";
+
+//* Styles
 import { CardBlock } from "../Form/styles";
 import { Card } from "../styles";
-
 import {
   CardCheckout,
   CardCheckoutItem,
@@ -8,16 +11,14 @@ import {
   CheckoutAmount,
   CheckoutButton,
 } from "./styles";
-
-import { cardData } from "../../Cards/constants";
-import { Minus, Plus, Trash } from "phosphor-react";
 import { CardSelectAmount } from "../../Cards/styles";
-import { NavLink } from "react-router-dom";
-import { useContext } from "react";
+import { Minus, Plus, Trash } from "phosphor-react";
+
+//* Component
 import { CartContext } from "../../../App";
 
 export function CheckoutCard() {
-  const { cartItems, removeItemFromCart, handleDeliveryForm } =
+  const { handleOrder, order, removeItemFromCart, handleDeliveryForm } =
     useContext(CartContext);
 
   return (
@@ -26,8 +27,8 @@ export function CheckoutCard() {
 
       <CardBlock>
         <CardCheckout>
-          {cartItems.map((item) => {
-            console.log(cartItems, "dentro do checkout");
+          {order.map((item) => {
+            // console.log(cartItems, "dentro do checkout");
             return (
               <>
                 <CardCheckoutItem key={item.title}>
@@ -79,7 +80,7 @@ export function CheckoutCard() {
         </CheckoutAmount>
 
         {/* <NavLink to="/success"> */}
-        <CheckoutButton onClick={() => handleDeliveryForm()} type="button">
+        <CheckoutButton onClick={() => handleOrder()} type="button">
           CONFIRMAR PEDIDO
         </CheckoutButton>
         {/* </NavLink> */}

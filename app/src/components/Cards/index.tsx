@@ -12,16 +12,10 @@ import { useContext } from "react";
 import { CartContext } from "../../App";
 
 export function Cards() {
-  const {
-    handleCart,
-    // setCounter,
-    // counter,
-    handleIncreaseAmount,
-    handleDecreaseAmount,
-    cartItem,
-  } = useContext(CartContext);
+  const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =
+    useContext(CartContext);
 
-  const allCards = cardData.map((card: CardProps) => {
+  const allCards = cartItems.map((card: CardProps) => {
     return (
       <Card>
         <CardImage>
