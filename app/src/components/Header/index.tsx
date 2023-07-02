@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { CartContext } from "../../App";
 
 export function Header() {
-  const { cartItems, cartItemsAmount } = useContext(CartContext);
+  const { cartItemsAmount } = useContext(CartContext);
 
   return (
     <HeaderContainer>

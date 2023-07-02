@@ -23,29 +23,34 @@ interface CartProps {
   addressDetails: string;
   setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
   dataCep: object[];
-  handleDeliveryForm: (item: any) => void;
+
   paymentMethod: string;
   setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
   handlePayment: React.Dispatch<React.SetStateAction<string>>;
   handleIncreaseAmount: (item: any) => void;
   handleDecreaseAmount: (item: any) => void;
   order: object[];
-  handleOrder: (item: any) => void;
+  handleOrder: (item?: any) => void;
+  setOrder: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 export interface OrderProps {
+  address?: AddressProps;
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
+}
+
+export interface AddressProps {
   cep: string;
   bairro: string;
   cidade: string;
   uf: string;
   logradouro: string;
-  number?: string;
+  numero?: string;
   complemento?: string;
   metodoPagamento: string;
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
 }
 
 export const CartContext = createContext({} as CartProps);
@@ -54,6 +59,7 @@ export function App() {
   const [cartItemsAmount, setCartItemsAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
   const [order, setOrder] = useState<OrderProps[]>([]);
+  const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
   // FORM STATES
   const [dataCep, setDataCep] = useState<object[]>([]);
@@ -63,11 +69,14 @@ export function App() {
 
   useEffect(() => {
     console.log(order, "aqui a order");
-    console.log(dataCep, "aqui a order");
-  }, [dataCep, paymentMethod, cartItems, order]);
+    console.log(cartItemsAmount, "total amount ");
+  }, [dataCep, paymentMethod, cartItems, order, finalOrder, cartItemsAmount]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
+
+    console.log(draft, "draft aqui");
+
     setOrder((prevState: any) => {
       if (prevState.includes(draft)) {
         return prevState;
@@ -76,42 +85,43 @@ export function App() {
       }
     });
 
-    handleCartCounter();
+    const amountItems = order.map((item) => item);
+
+    console.log(amountItems, "amount items");
+    const cartTotalAmount = amountItems.reduce((acc, curr) => {
+      return acc + curr.amount;
+    }, 0);
+
+    setCartItemsAmount(cartTotalAmount);
   }
 
-  function handleOrder(param: any) {
+  // function handleCartCounter() {
+
+  //   console.log(amountItems, "aqui o amount items");
+
+  //   const cartTotalAmount = amountItems.reduce((acc, curr) => {
+  //     return acc + curr;
+  //   }, 0);
+
+  //   setCartItemsAmount(cartTotalAmount);
+  // }
+
+  function handleOrder() {
     if (!order.length) return;
 
-    console.log(order, "aqui  a order");
-    console.log(dataCep, "recebido da função");
-    const orderData = {
-      ...order,
-      dataCep,
-    };
-    console.log(orderData, "objeto montado");
-
-    // setOrder(orderData);
-  }
-
-  function handleDeliveryForm() {
     const newCepData = {
       ...dataCep,
-      number: addressNumber,
+      numero: addressNumber,
       complemento: addressDetails,
       metodoPagamento: paymentMethod,
     };
 
-    setDataCep(newCepData);
-  }
+    const orderData: OrderProps = {
+      ...order,
+      address: newCepData,
+    };
 
-  function handleCartCounter() {
-    const amountItems = cartItems.map((item) => item.amount);
-
-    const cartTotalAmount = amountItems.reduce((acc, curr) => {
-      return acc + curr;
-    }, 0);
-
-    setCartItemsAmount(cartTotalAmount);
+    setFinalOrder(orderData);
   }
 
   async function fetchAddress(cep: string) {
@@ -124,7 +134,6 @@ export function App() {
     const response = await axios.get(`http://cep.la/${cep}`, header);
 
     setDataCep(response.data);
-    console.log(response.data);
   }
 
   function removeItemFromCart(item: any) {
@@ -137,7 +146,6 @@ export function App() {
     setCartItems((prevCartItems) => {
       const updatedCartItems = prevCartItems.map((card) => {
         if (card.id === item.id) {
-          console.log(card.amount, "aqui o cart");
           return { ...card, amount: card.amount + 1 };
         }
         return card;
@@ -152,6 +160,7 @@ export function App() {
       const updatedCartItems = prevCartItems.map((card: any) => {
         if (card.id === item.id && card.amount > 0) {
           const draft = { ...card, amount: card.amount - 1 };
+
           return draft;
         }
         return card;
@@ -168,8 +177,6 @@ export function App() {
           handleCart,
           cartItemsAmount,
           cartItems,
-          // counter,
-          // setCounter,
           removeItemFromCart,
           fetchAddress,
           addressNumber,
@@ -177,12 +184,13 @@ export function App() {
           addressDetails,
           setAddressDetails,
           dataCep,
-          handleDeliveryForm,
+
           setPaymentMethod,
           handleIncreaseAmount,
           handleDecreaseAmount,
           order,
           handleOrder,
+          setOrder,
         }}
       >
         <BrowserRouter>

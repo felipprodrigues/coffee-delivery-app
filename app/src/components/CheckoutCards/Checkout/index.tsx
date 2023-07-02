@@ -1,5 +1,5 @@
 //* Utils
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 //* Styles
 import { CardBlock } from "../Form/styles";
@@ -18,8 +18,28 @@ import { Minus, Plus, Trash } from "phosphor-react";
 import { CartContext } from "../../../App";
 
 export function CheckoutCard() {
-  const { handleOrder, order, removeItemFromCart, handleDeliveryForm } =
-    useContext(CartContext);
+  const {
+    order,
+    removeItemFromCart,
+    handleOrder,
+    handleIncreaseAmount,
+    handleDecreaseAmount,
+    setOrder,
+  } = useContext(CartContext);
+
+  useEffect(() => {}, [order]);
+
+  function decreaseAmount(item: any) {
+    setOrder((prevState: any) => [
+      ...prevState.map((product: any) => {
+        if (product.id === item.id && product.amount > 0) {
+          return { ...product, amount: product.amount - 1 };
+        } else {
+          return product;
+        }
+      }),
+    ]);
+  }
 
   return (
     <Card>
@@ -28,7 +48,7 @@ export function CheckoutCard() {
       <CardBlock>
         <CardCheckout>
           {order.map((item) => {
-            // console.log(cartItems, "dentro do checkout");
+            console.log(order, "aqui a order");
             return (
               <>
                 <CardCheckoutItem key={item.title}>
@@ -39,9 +59,12 @@ export function CheckoutCard() {
 
                     <div>
                       <CardSelectAmount>
-                        <Minus size={16} />
+                        <Minus size={16} onClick={() => decreaseAmount(item)} />
                         <span>{item.amount}</span>
-                        <Plus size={16} />
+                        <Plus
+                          size={16}
+                          onClick={() => handleIncreaseAmount(item)}
+                        />
                       </CardSelectAmount>
 
                       <CardSelectAmount
