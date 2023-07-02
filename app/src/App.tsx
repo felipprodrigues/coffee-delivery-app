@@ -68,11 +68,15 @@ export function App() {
   const [paymentMethod, setPaymentMethod] = useState("");
 
   useEffect(() => {
-    console.log(finalOrder, "123");
-  }, [dataCep, paymentMethod, cartItems, order, finalOrder]);
+    console.log(order, "aqui a order");
+    console.log(cartItemsAmount, "total amount ");
+  }, [dataCep, paymentMethod, cartItems, order, finalOrder, cartItemsAmount]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
+
+    console.log(draft, "draft aqui");
+
     setOrder((prevState: any) => {
       if (prevState.includes(draft)) {
         return prevState;
@@ -81,8 +85,26 @@ export function App() {
       }
     });
 
-    handleCartCounter();
+    const amountItems = order.map((item) => item);
+
+    console.log(amountItems, "amount items");
+    const cartTotalAmount = amountItems.reduce((acc, curr) => {
+      return acc + curr.amount;
+    }, 0);
+
+    setCartItemsAmount(cartTotalAmount);
   }
+
+  // function handleCartCounter() {
+
+  //   console.log(amountItems, "aqui o amount items");
+
+  //   const cartTotalAmount = amountItems.reduce((acc, curr) => {
+  //     return acc + curr;
+  //   }, 0);
+
+  //   setCartItemsAmount(cartTotalAmount);
+  // }
 
   function handleOrder() {
     if (!order.length) return;
@@ -100,16 +122,6 @@ export function App() {
     };
 
     setFinalOrder(orderData);
-  }
-
-  function handleCartCounter() {
-    const amountItems = cartItems.map((item) => item.amount);
-
-    const cartTotalAmount = amountItems.reduce((acc, curr) => {
-      return acc + curr;
-    }, 0);
-
-    setCartItemsAmount(cartTotalAmount);
   }
 
   async function fetchAddress(cep: string) {
@@ -165,8 +177,6 @@ export function App() {
           handleCart,
           cartItemsAmount,
           cartItems,
-          // counter,
-          // setCounter,
           removeItemFromCart,
           fetchAddress,
           addressNumber,
