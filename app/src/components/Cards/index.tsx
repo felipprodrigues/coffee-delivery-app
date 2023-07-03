@@ -16,7 +16,6 @@ export function Cards() {
     useContext(CartContext);
 
   const allCards = cartItems.map((card: CardProps) => {
-    // console.log(cartItems, "aqui");
     return (
       <Card>
         <CardImage>

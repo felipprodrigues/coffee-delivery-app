@@ -22,18 +22,29 @@ export function CheckoutCard() {
     order,
     removeItemFromCart,
     handleOrder,
-    handleIncreaseAmount,
-    handleDecreaseAmount,
     setOrder,
+    cartTotalAmount,
+    totalPrice,
   } = useContext(CartContext);
 
-  useEffect(() => {}, [order]);
-
   function decreaseAmount(item: any) {
+    console.log(item.amount, "aqui ");
     setOrder((prevState: any) => [
       ...prevState.map((product: any) => {
-        if (product.id === item.id && product.amount > 0) {
+        if (product.id === item.id && product.amount > 1) {
           return { ...product, amount: product.amount - 1 };
+        } else {
+          return product;
+        }
+      }),
+    ]);
+  }
+
+  function increaseAmount(item: any) {
+    setOrder((prevState: any) => [
+      ...prevState.map((product: any) => {
+        if (product.id === item.id) {
+          return { ...product, amount: product.amount + 1 };
         } else {
           return product;
         }
@@ -47,7 +58,7 @@ export function CheckoutCard() {
 
       <CardBlock>
         <CardCheckout>
-          {order.map((item) => {
+          {order.map((item: any) => {
             console.log(order, "aqui a order");
             return (
               <>
@@ -61,10 +72,7 @@ export function CheckoutCard() {
                       <CardSelectAmount>
                         <Minus size={16} onClick={() => decreaseAmount(item)} />
                         <span>{item.amount}</span>
-                        <Plus
-                          size={16}
-                          onClick={() => handleIncreaseAmount(item)}
-                        />
+                        <Plus size={16} onClick={() => increaseAmount(item)} />
                       </CardSelectAmount>
 
                       <CardSelectAmount
@@ -90,7 +98,7 @@ export function CheckoutCard() {
         <CheckoutAmount>
           <div>
             <span>Total de itens</span>
-            <span>R$ 13,00</span>
+            <span>{cartTotalAmount}</span>
           </div>
           <div>
             <span>Entrega</span>
@@ -98,7 +106,7 @@ export function CheckoutCard() {
           </div>
           <div>
             <span>Total</span>
-            <span>R$ 18,00</span>
+            <span>R$ {totalPrice}</span>
           </div>
         </CheckoutAmount>
 

@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { CartContext } from "../../App";
 
 export function Header() {
-  const { cartItemsAmount } = useContext(CartContext);
+  const { cartTotalAmount } = useContext(CartContext);
 
   return (
     <HeaderContainer>
@@ -29,7 +29,7 @@ export function Header() {
           <HeaderLabel>
             <ShoppingCart size={24} />
             <HeaderShoppingCartCounter>
-              {cartItemsAmount}
+              {cartTotalAmount}
             </HeaderShoppingCartCounter>
           </HeaderLabel>
         </NavLink>

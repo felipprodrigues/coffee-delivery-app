@@ -62,6 +62,7 @@ export const CardTitle = styled.div`
 export const CardSelectAmount = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 
   padding: 0.5rem;
   border-radius: 6px;

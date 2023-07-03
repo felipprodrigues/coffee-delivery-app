@@ -11,9 +11,10 @@ import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
 import { CardProps, cardData } from "./components/Cards/constants";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 
 interface CartProps {
-  cartItemsAmount: number;
+  cartTotalAmount: number;
   cartItems: CardProps[];
   handleCart: (item: any) => void;
   removeItemFromCart: (item: any) => void;
@@ -32,6 +33,7 @@ interface CartProps {
   order: object[];
   handleOrder: (item?: any) => void;
   setOrder: React.Dispatch<React.SetStateAction<string[]>>;
+  totalPrice: number;
 }
 
 export interface OrderProps {
@@ -56,7 +58,7 @@ export interface AddressProps {
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
-  const [cartItemsAmount, setCartItemsAmount] = useState(0);
+  const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
   const [order, setOrder] = useState<OrderProps[]>([]);
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
@@ -66,16 +68,32 @@ export function App() {
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [totalPrice, setTotalPrice] = useState<string>("");
 
   useEffect(() => {
-    console.log(order, "aqui a order");
-    console.log(cartItemsAmount, "total amount ");
-  }, [dataCep, paymentMethod, cartItems, order, finalOrder, cartItemsAmount]);
+    if (!order.length) {
+      setCartTotalAmount(0);
+      setTotalPrice("0");
+      return;
+    }
+
+    const cartTotalAmount = order.reduce((acc, curr) => {
+      return acc + curr.amount;
+    }, 0);
+
+    const calculatePrice = order.reduce((sum, item) => {
+      const price = item.price.replace(",", ".");
+      return sum + parseFloat(price);
+    }, 0);
+
+    const calculateTotalPrice = calculatePrice * cartTotalAmount;
+
+    setCartTotalAmount(cartTotalAmount);
+    setTotalPrice(calculateTotalPrice.toFixed(2));
+  }, [order, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
-
-    console.log(draft, "draft aqui");
 
     setOrder((prevState: any) => {
       if (prevState.includes(draft)) {
@@ -84,27 +102,7 @@ export function App() {
         return [...prevState, draft];
       }
     });
-
-    const amountItems = order.map((item) => item);
-
-    console.log(amountItems, "amount items");
-    const cartTotalAmount = amountItems.reduce((acc, curr) => {
-      return acc + curr.amount;
-    }, 0);
-
-    setCartItemsAmount(cartTotalAmount);
   }
-
-  // function handleCartCounter() {
-
-  //   console.log(amountItems, "aqui o amount items");
-
-  //   const cartTotalAmount = amountItems.reduce((acc, curr) => {
-  //     return acc + curr;
-  //   }, 0);
-
-  //   setCartItemsAmount(cartTotalAmount);
-  // }
 
   function handleOrder() {
     if (!order.length) return;
@@ -124,6 +122,11 @@ export function App() {
     setFinalOrder(orderData);
   }
 
+  useEffect(() => {
+    const mapping = order.map((item) => item);
+    console.log(mapping, "map");
+  }, [order]);
+
   async function fetchAddress(cep: string) {
     const header = {
       headers: {
@@ -137,6 +140,7 @@ export function App() {
   }
 
   function removeItemFromCart(item: any) {
+    console.log(item, "aqui ");
     const draft = order.filter((order) => order.id !== item.id);
 
     setOrder(draft);
@@ -175,7 +179,7 @@ export function App() {
       <CartContext.Provider
         value={{
           handleCart,
-          cartItemsAmount,
+          cartTotalAmount,
           cartItems,
           removeItemFromCart,
           fetchAddress,
@@ -191,6 +195,7 @@ export function App() {
           order,
           handleOrder,
           setOrder,
+          totalPrice,
         }}
       >
         <BrowserRouter>

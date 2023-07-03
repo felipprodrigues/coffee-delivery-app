@@ -30,7 +30,7 @@ export function FormCard() {
     setPaymentMethod,
   } = useContext(CartContext);
 
-  const paymentMethod: PaymentProps[] = [
+  const paymentMethodCards: PaymentProps[] = [
     {
       id: uuidv4(),
       icon: <CreditCard size={24} />,
@@ -47,6 +47,22 @@ export function FormCard() {
       label: "dinheiro",
     },
   ];
+
+  // const [inputChecked, setInputChecked] = useState(false);
+
+  // function handleInput(param: any, item: any) {
+  //   console.log(item, "aqui");
+  //   const findItem = paymentMethodCards.find((method) => method.id === item.id);
+
+  //   if (findItem) {
+  //     setInputChecked(true);
+  //   }
+  //   // setInputChecked(itemId);
+  // }
+
+  // useEffect(() => {
+  //   console.log(inputChecked, "aqui o efect");
+  // }, [inputChecked]);
 
   return (
     <Card>
@@ -140,15 +156,19 @@ export function FormCard() {
         </div>
 
         <CardPaymentMethod>
-          {paymentMethod.map((item) => {
+          {paymentMethodCards.map((item) => {
             return (
-              <PaymentButton>
+              <PaymentButton
+              // className={inputChecked ? "isChecked" : ""}
+              >
                 {item.icon}
                 <input
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={() => setPaymentMethod(item.label)}
+                  onChange={() => {
+                    setPaymentMethod(item.label);
+                  }}
                   value={item.label}
                 />
                 <span>{item.label}</span>
