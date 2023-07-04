@@ -11,7 +11,7 @@ import { useContext } from "react";
 import { CartContext } from "../../App";
 
 export function Header() {
-  const { cartTotalAmount } = useContext(CartContext);
+  const { cartTotalAmount, dataCep } = useContext(CartContext);
 
   return (
     <HeaderContainer>
@@ -22,7 +22,12 @@ export function Header() {
       <div>
         <HeaderLabel>
           <MapPin size={24} />
-          <span>Bauru, SP</span>
+          {!dataCep ? null : (
+            <span>
+              {dataCep.cidade}
+              {dataCep.uf && `, ${dataCep.uf}`}
+            </span>
+          )}
         </HeaderLabel>
 
         <NavLink to="/checkout" title="Checkout">

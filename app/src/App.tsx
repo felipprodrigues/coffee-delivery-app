@@ -1,5 +1,6 @@
 //* Routing
 import { BrowserRouter } from "react-router-dom";
+
 import { Router } from "./Router";
 
 //* Context
@@ -11,7 +12,8 @@ import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
 import { CardProps, cardData } from "./components/Cards/constants";
 import axios from "axios";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface CartProps {
   cartTotalAmount: number;
@@ -24,7 +26,7 @@ interface CartProps {
   addressDetails: string;
   setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
   dataCep: object[];
-
+  loading: boolean;
   paymentMethod: string;
   setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
   handlePayment: React.Dispatch<React.SetStateAction<string>>;
@@ -33,7 +35,8 @@ interface CartProps {
   order: object[];
   handleOrder: (item?: any) => void;
   setOrder: React.Dispatch<React.SetStateAction<string[]>>;
-  totalPrice: number;
+  totalPrice: string;
+  finalOrder: object[];
 }
 
 export interface OrderProps {
@@ -63,6 +66,8 @@ export function App() {
   const [order, setOrder] = useState<OrderProps[]>([]);
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
+  const [loading, setLoading] = useState(false);
+
   // FORM STATES
   const [dataCep, setDataCep] = useState<object[]>([]);
   const [addressNumber, setAddressNumber] = useState("");
@@ -81,31 +86,48 @@ export function App() {
       return acc + curr.amount;
     }, 0);
 
-    const calculatePrice = order.reduce((sum, item) => {
+    const calculateTotal = order.reduce((sum, item) => {
       const price = item.price.replace(",", ".");
-      return sum + parseFloat(price);
+      return sum + parseFloat(price) * item.amount;
     }, 0);
 
-    const calculateTotalPrice = calculatePrice * cartTotalAmount;
-
     setCartTotalAmount(cartTotalAmount);
-    setTotalPrice(calculateTotalPrice.toFixed(2));
+    setTotalPrice(calculateTotal.toFixed(2));
   }, [order, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
 
+    if (draft?.amount === 0) {
+      toast.warning("Adicione ao menos um item ao carrinho");
+      return;
+    }
+
     setOrder((prevState: any) => {
-      if (prevState.includes(draft)) {
+      if (
+        prevState.includes(draft) ||
+        prevState.some((order: any) => order.id === item.id)
+      ) {
+        toast.warning(
+          "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+        );
         return prevState;
       } else {
+        toast.success("Produto adicionado ao carrinho!");
         return [...prevState, draft];
       }
     });
   }
 
   function handleOrder() {
-    if (!order.length) return;
+    if (!dataCep?.cep) {
+      toast.error("Preencha o formulário");
+      return;
+    }
+    if (!addressNumber.length || !paymentMethod) {
+      toast.error("Preencha todos os campos necessários");
+      return;
+    }
 
     const newCepData = {
       ...dataCep,
@@ -119,13 +141,18 @@ export function App() {
       address: newCepData,
     };
 
-    setFinalOrder(orderData);
+    setLoading(true);
+
+    setTimeout(() => {
+      setFinalOrder(orderData);
+      setLoading(false);
+      toast.success("Pedido registrado com sucesso!");
+    }, 1000);
   }
 
   useEffect(() => {
-    const mapping = order.map((item) => item);
-    console.log(mapping, "map");
-  }, [order]);
+    console.log(finalOrder, "final aqui");
+  }, [finalOrder]);
 
   async function fetchAddress(cep: string) {
     const header = {
@@ -176,6 +203,7 @@ export function App() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <ToastContainer position="top-left" />
       <CartContext.Provider
         value={{
           handleCart,
@@ -188,7 +216,7 @@ export function App() {
           addressDetails,
           setAddressDetails,
           dataCep,
-
+          loading,
           setPaymentMethod,
           handleIncreaseAmount,
           handleDecreaseAmount,
@@ -196,6 +224,7 @@ export function App() {
           handleOrder,
           setOrder,
           totalPrice,
+          finalOrder,
         }}
       >
         <BrowserRouter>

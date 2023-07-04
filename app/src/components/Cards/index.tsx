@@ -7,7 +7,7 @@ import {
   CardTag,
   CardTitle,
 } from "./styles";
-import { CardProps, cardData } from "./constants";
+import { CardProps } from "./constants";
 import { useContext } from "react";
 import { CartContext } from "../../App";
 
