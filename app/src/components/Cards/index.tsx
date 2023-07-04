@@ -7,7 +7,7 @@ import {
   CardTag,
   CardTitle,
 } from "./styles";
-import { CardProps, cardData } from "./constants";
+import { CardProps } from "./constants";
 import { useContext } from "react";
 import { CartContext } from "../../App";
 
@@ -16,7 +16,6 @@ export function Cards() {
     useContext(CartContext);
 
   const allCards = cartItems.map((card: CardProps) => {
-    // console.log(cartItems, "aqui");
     return (
       <Card>
         <CardImage>

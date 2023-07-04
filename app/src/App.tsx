@@ -1,5 +1,6 @@
 //* Routing
 import { BrowserRouter } from "react-router-dom";
+
 import { Router } from "./Router";
 
 //* Context
@@ -11,9 +12,11 @@ import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
 import { CardProps, cardData } from "./components/Cards/constants";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface CartProps {
-  cartItemsAmount: number;
+  cartTotalAmount: number;
   cartItems: CardProps[];
   handleCart: (item: any) => void;
   removeItemFromCart: (item: any) => void;
@@ -23,7 +26,7 @@ interface CartProps {
   addressDetails: string;
   setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
   dataCep: object[];
-
+  loading: boolean;
   paymentMethod: string;
   setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
   handlePayment: React.Dispatch<React.SetStateAction<string>>;
@@ -32,6 +35,8 @@ interface CartProps {
   order: object[];
   handleOrder: (item?: any) => void;
   setOrder: React.Dispatch<React.SetStateAction<string[]>>;
+  totalPrice: string;
+  finalOrder: object[];
 }
 
 export interface OrderProps {
@@ -56,58 +61,73 @@ export interface AddressProps {
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
-  const [cartItemsAmount, setCartItemsAmount] = useState(0);
+  const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
   const [order, setOrder] = useState<OrderProps[]>([]);
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
+
+  const [loading, setLoading] = useState(false);
 
   // FORM STATES
   const [dataCep, setDataCep] = useState<object[]>([]);
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [totalPrice, setTotalPrice] = useState<string>("");
 
   useEffect(() => {
-    console.log(order, "aqui a order");
-    console.log(cartItemsAmount, "total amount ");
-  }, [dataCep, paymentMethod, cartItems, order, finalOrder, cartItemsAmount]);
+    if (!order.length) {
+      setCartTotalAmount(0);
+      setTotalPrice("0");
+      return;
+    }
+
+    const cartTotalAmount = order.reduce((acc, curr) => {
+      return acc + curr.amount;
+    }, 0);
+
+    const calculateTotal = order.reduce((sum, item) => {
+      const price = item.price.replace(",", ".");
+      return sum + parseFloat(price) * item.amount;
+    }, 0);
+
+    setCartTotalAmount(cartTotalAmount);
+    setTotalPrice(calculateTotal.toFixed(2));
+  }, [order, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
 
-    console.log(draft, "draft aqui");
+    if (draft?.amount === 0) {
+      toast.warning("Adicione ao menos um item ao carrinho");
+      return;
+    }
 
     setOrder((prevState: any) => {
-      if (prevState.includes(draft)) {
+      if (
+        prevState.includes(draft) ||
+        prevState.some((order: any) => order.id === item.id)
+      ) {
+        toast.warning(
+          "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+        );
         return prevState;
       } else {
+        toast.success("Produto adicionado ao carrinho!");
         return [...prevState, draft];
       }
     });
-
-    const amountItems = order.map((item) => item);
-
-    console.log(amountItems, "amount items");
-    const cartTotalAmount = amountItems.reduce((acc, curr) => {
-      return acc + curr.amount;
-    }, 0);
-
-    setCartItemsAmount(cartTotalAmount);
   }
 
-  // function handleCartCounter() {
-
-  //   console.log(amountItems, "aqui o amount items");
-
-  //   const cartTotalAmount = amountItems.reduce((acc, curr) => {
-  //     return acc + curr;
-  //   }, 0);
-
-  //   setCartItemsAmount(cartTotalAmount);
-  // }
-
   function handleOrder() {
-    if (!order.length) return;
+    if (!dataCep?.cep) {
+      toast.error("Preencha o formulário");
+      return;
+    }
+    if (!addressNumber.length || !paymentMethod) {
+      toast.error("Preencha todos os campos necessários");
+      return;
+    }
 
     const newCepData = {
       ...dataCep,
@@ -121,8 +141,18 @@ export function App() {
       address: newCepData,
     };
 
-    setFinalOrder(orderData);
+    setLoading(true);
+
+    setTimeout(() => {
+      setFinalOrder(orderData);
+      setLoading(false);
+      toast.success("Pedido registrado com sucesso!");
+    }, 1000);
   }
+
+  useEffect(() => {
+    console.log(finalOrder, "final aqui");
+  }, [finalOrder]);
 
   async function fetchAddress(cep: string) {
     const header = {
@@ -137,6 +167,7 @@ export function App() {
   }
 
   function removeItemFromCart(item: any) {
+    console.log(item, "aqui ");
     const draft = order.filter((order) => order.id !== item.id);
 
     setOrder(draft);
@@ -172,10 +203,11 @@ export function App() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <ToastContainer position="top-left" />
       <CartContext.Provider
         value={{
           handleCart,
-          cartItemsAmount,
+          cartTotalAmount,
           cartItems,
           removeItemFromCart,
           fetchAddress,
@@ -184,13 +216,15 @@ export function App() {
           addressDetails,
           setAddressDetails,
           dataCep,
-
+          loading,
           setPaymentMethod,
           handleIncreaseAmount,
           handleDecreaseAmount,
           order,
           handleOrder,
           setOrder,
+          totalPrice,
+          finalOrder,
         }}
       >
         <BrowserRouter>

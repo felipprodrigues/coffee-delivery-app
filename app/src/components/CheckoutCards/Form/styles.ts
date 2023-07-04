@@ -101,10 +101,10 @@ export const PaymentButton = styled.label`
   }
 
   /* input {
-      display: none;
-    } */
+    display: none;
+  } */
 
-  /* input:checked {
+  /* &#isChecked {
     outline: none !important;
     border: 1px solid red;
     box-shadow: 0 0 10px #719ece;
