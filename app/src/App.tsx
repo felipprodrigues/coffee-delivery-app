@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Router } from "./Router";
 
 //* Context
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 //* Themes
 import { ThemeProvider } from "styled-components";
@@ -63,7 +63,22 @@ export const CartContext = createContext({} as CartProps);
 export function App() {
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
-  const [order, setOrder] = useState<OrderProps[]>([]);
+
+  const [order, dispatch] = useReducer((state: OrderProps[], action: any) => {
+    console.log(state, "aqui a order");
+    console.log(action, "dispatch");
+
+    if (action.type === "HANDLE_CART") {
+      return [...state, action.payload.draft];
+    }
+
+    if (action.type === "REMOVE_ITEM_FROM_CART") {
+      return [...state, action.payload.draft];
+    }
+
+    return state;
+  }, []);
+
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
   const [loading, setLoading] = useState(false);
@@ -103,20 +118,26 @@ export function App() {
       return;
     }
 
-    setOrder((prevState: any) => {
-      if (
-        prevState.includes(draft) ||
-        prevState.some((order: any) => order.id === item.id)
-      ) {
-        toast.warning(
-          "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
-        );
-        return prevState;
-      } else {
-        toast.success("Produto adicionado ao carrinho!");
-        return [...prevState, draft];
-      }
+    dispatch({
+      type: "HANDLE_CART",
+      payload: {
+        draft,
+      },
     });
+    // setOrder((prevState: any) => {
+    //   if (
+    //     prevState.includes(draft) ||
+    //     prevState.some((order: any) => order.id === item.id)
+    //   ) {
+    //     toast.warning(
+    //       "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+    //     );
+    //     return prevState;
+    //   } else {
+    //     toast.success("Produto adicionado ao carrinho!");
+    //     return [...prevState, draft];
+    //   }
+    // });
   }
 
   function handleOrder() {
@@ -170,7 +191,13 @@ export function App() {
     console.log(item, "aqui ");
     const draft = order.filter((order) => order.id !== item.id);
 
-    setOrder(draft);
+    // setOrder(draft);
+    dispatch({
+      type: "REMOVE_ITEM_FROM_CART",
+      payload: {
+        draft,
+      },
+    });
   }
 
   function handleIncreaseAmount(item: any) {
@@ -222,7 +249,7 @@ export function App() {
           handleDecreaseAmount,
           order,
           handleOrder,
-          setOrder,
+          // setOrder,
           totalPrice,
           finalOrder,
         }}
