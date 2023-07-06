@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Router } from "./Router";
 
 //* Context
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 
 //* Themes
 import { ThemeProvider } from "styled-components";
@@ -39,14 +39,6 @@ interface CartProps {
   finalOrder: object[];
 }
 
-export interface OrderProps {
-  address?: AddressProps;
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
-}
-
 export interface AddressProps {
   cep: string;
   bairro: string;
@@ -57,6 +49,13 @@ export interface AddressProps {
   complemento?: string;
   metodoPagamento: string;
 }
+export interface OrderProps {
+  address?: AddressProps;
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
+}
 
 export const CartContext = createContext({} as CartProps);
 
@@ -64,6 +63,32 @@ export function App() {
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
   const [order, setOrder] = useState<OrderProps[]>([]);
+
+  const [setNewOrder, dispatch] = useReducer(
+    (state: OrderProps[], action: any) => {
+      console.log(state, "aqui os estados");
+      console.log(action, "aqui actions");
+
+      return state;
+    },
+    []
+  );
+
+  // const [order, dispatch] = useReducer((state: OrderProps[], action: any) => {
+  //   console.log(state, "aqui a order");
+  //   console.log(action, "dispatch");
+
+  //   if (action.type === "HANDLE_CART") {
+  //     return [...state, action.payload.draft];
+  //   }
+
+  //   if (action.type === "REMOVE_ITEM_FROM_CART") {
+  //     return [...state, action.payload.draft];
+  //   }
+
+  //   return state;
+  // }, []);
+
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
   const [loading, setLoading] = useState(false);
@@ -102,6 +127,13 @@ export function App() {
       toast.warning("Adicione ao menos um item ao carrinho");
       return;
     }
+
+    dispatch({
+      type: "HANDLE_CART",
+      payload: {
+        draft,
+      },
+    });
 
     setOrder((prevState: any) => {
       if (
@@ -171,6 +203,12 @@ export function App() {
     const draft = order.filter((order) => order.id !== item.id);
 
     setOrder(draft);
+    // dispatch({
+    //   type: "REMOVE_ITEM_FROM_CART",
+    //   payload: {
+    //     draft,
+    //   },
+    // });
   }
 
   function handleIncreaseAmount(item: any) {

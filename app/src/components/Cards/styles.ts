@@ -12,29 +12,8 @@ export const Card = styled.div`
   max-width: 275px;
   height: 310px;
 
-  div {
+  & > div {
     display: flex;
-
-    div:last-child {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-
-      padding: 0.5rem;
-      border-radius: 6px;
-      background-color: ${(props) => props.theme["secondary-500"]};
-
-      cursor: pointer;
-      transition: all 0.07s linear;
-
-      svg {
-        color: ${(props) => props.theme.white};
-      }
-    }
-
-    div:last-child:hover {
-      filter: brightness(0.8);
-    }
   }
 `;
 
@@ -105,6 +84,7 @@ export const CardTag = styled.div`
     padding: 0.25rem;
     border-radius: 6px;
     gap: 0.25rem;
+    cursor: default;
 
     span {
       font-size: ${(props) => props.theme["font-xxs"]};
@@ -131,5 +111,26 @@ export const CardFooter = styled.div`
       font-size: ${(props) => props.theme["title-m"]};
       color: ${(props) => props.theme["base-700"]};
     }
+  }
+
+  & > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: ${(props) => props.theme["secondary-500"]};
+
+    cursor: pointer;
+    transition: all 0.07s linear;
+
+    svg {
+      color: ${(props) => props.theme.white};
+    }
+  }
+
+  & > div:last-child:hover {
+    filter: brightness(0.8);
   }
 `;
