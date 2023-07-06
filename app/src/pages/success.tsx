@@ -20,7 +20,6 @@ interface StatusProps {
 
 export function Success() {
   const { finalOrder, loading } = useContext(CartContext);
-  // console.log(finalOrder.address, "aqui com conteudo");
   console.log(finalOrder, "aqui ");
 
   const status: StatusProps = [
@@ -39,7 +38,6 @@ export function Success() {
     {
       icon: <CurrencyDollar size={24} />,
       msg: "Pagamento na entrega",
-      // msg: finalOrder.address.formaPagamento,
       bgColor: "#c47f17",
     },
   ];

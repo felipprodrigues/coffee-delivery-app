@@ -39,14 +39,6 @@ interface CartProps {
   finalOrder: object[];
 }
 
-export interface OrderProps {
-  address?: AddressProps;
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
-}
-
 export interface AddressProps {
   cep: string;
   bairro: string;
@@ -57,27 +49,45 @@ export interface AddressProps {
   complemento?: string;
   metodoPagamento: string;
 }
+export interface OrderProps {
+  address?: AddressProps;
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
+}
 
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
+  const [order, setOrder] = useState<OrderProps[]>([]);
 
-  const [order, dispatch] = useReducer((state: OrderProps[], action: any) => {
-    console.log(state, "aqui a order");
-    console.log(action, "dispatch");
+  const [setNewOrder, dispatch] = useReducer(
+    (state: OrderProps[], action: any) => {
+      console.log(state, "aqui os estados");
+      console.log(action, "aqui actions");
 
-    if (action.type === "HANDLE_CART") {
-      return [...state, action.payload.draft];
-    }
+      return state;
+    },
+    []
+  );
 
-    if (action.type === "REMOVE_ITEM_FROM_CART") {
-      return [...state, action.payload.draft];
-    }
+  // const [order, dispatch] = useReducer((state: OrderProps[], action: any) => {
+  //   console.log(state, "aqui a order");
+  //   console.log(action, "dispatch");
 
-    return state;
-  }, []);
+  //   if (action.type === "HANDLE_CART") {
+  //     return [...state, action.payload.draft];
+  //   }
+
+  //   if (action.type === "REMOVE_ITEM_FROM_CART") {
+  //     return [...state, action.payload.draft];
+  //   }
+
+  //   return state;
+  // }, []);
 
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
@@ -124,20 +134,21 @@ export function App() {
         draft,
       },
     });
-    // setOrder((prevState: any) => {
-    //   if (
-    //     prevState.includes(draft) ||
-    //     prevState.some((order: any) => order.id === item.id)
-    //   ) {
-    //     toast.warning(
-    //       "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
-    //     );
-    //     return prevState;
-    //   } else {
-    //     toast.success("Produto adicionado ao carrinho!");
-    //     return [...prevState, draft];
-    //   }
-    // });
+
+    setOrder((prevState: any) => {
+      if (
+        prevState.includes(draft) ||
+        prevState.some((order: any) => order.id === item.id)
+      ) {
+        toast.warning(
+          "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+        );
+        return prevState;
+      } else {
+        toast.success("Produto adicionado ao carrinho!");
+        return [...prevState, draft];
+      }
+    });
   }
 
   function handleOrder() {
@@ -191,13 +202,13 @@ export function App() {
     console.log(item, "aqui ");
     const draft = order.filter((order) => order.id !== item.id);
 
-    // setOrder(draft);
-    dispatch({
-      type: "REMOVE_ITEM_FROM_CART",
-      payload: {
-        draft,
-      },
-    });
+    setOrder(draft);
+    // dispatch({
+    //   type: "REMOVE_ITEM_FROM_CART",
+    //   payload: {
+    //     draft,
+    //   },
+    // });
   }
 
   function handleIncreaseAmount(item: any) {
@@ -249,7 +260,7 @@ export function App() {
           handleDecreaseAmount,
           order,
           handleOrder,
-          // setOrder,
+          setOrder,
           totalPrice,
           finalOrder,
         }}
