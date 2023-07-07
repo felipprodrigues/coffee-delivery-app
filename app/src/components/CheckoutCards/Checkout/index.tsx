@@ -30,43 +30,38 @@ export function CheckoutCard() {
     totalPrice,
     dataCep,
     loading,
+    setNewOrder,
+    dispatch,
   } = useContext(CartContext);
 
   function decreaseAmount(item: any) {
-    console.log(item.amount, "aqui ");
-    setOrder((prevState: any) => [
-      ...prevState.map((product: any) => {
-        if (product.id === item.id && product.amount > 1) {
-          return { ...product, amount: product.amount - 1 };
-        } else {
-          return product;
-        }
-      }),
-    ]);
+    dispatch({
+      type: "CHECKOUT_DECREASE_ITEM_QUANTITY",
+      payload: {
+        clickedItem: item,
+      },
+    });
   }
 
   function increaseAmount(item: any) {
-    setOrder((prevState: any) => [
-      ...prevState.map((product: any) => {
-        if (product.id === item.id) {
-          return { ...product, amount: product.amount + 1 };
-        } else {
-          return product;
-        }
-      }),
-    ]);
+    dispatch({
+      type: "CHECKOUT_INCREASE_ITEM_QUANTITY",
+      payload: {
+        clickedItem: item,
+      },
+    });
   }
 
   return (
     <Card>
       <h3>Cafés selecionados</h3>
 
-      {!order.length ? (
+      {!setNewOrder.length ? (
         <p>Nenhum item selecionado</p>
       ) : (
         <CardBlock>
           <CardCheckout>
-            {order.map((item: any) => {
+            {setNewOrder.map((item: any) => {
               return (
                 <>
                   <CardCheckoutItem key={item.title}>
