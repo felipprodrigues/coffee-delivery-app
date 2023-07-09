@@ -37,6 +37,7 @@ interface CartProps {
   setOrder: React.Dispatch<React.SetStateAction<string[]>>;
   totalPrice: string;
   finalOrder: object[];
+  setNewOrder: object[];
 }
 
 export interface AddressProps {
@@ -67,27 +68,95 @@ export function App() {
   const [setNewOrder, dispatch] = useReducer(
     (state: OrderProps[], action: any) => {
       console.log(state, "aqui os estados");
-      console.log(action, "aqui actions");
+      // console.log(action.payload, "aqui actions");
+
+      if (action.type === "HANDLE_CART") {
+        const draft = action.payload.draft;
+
+        if (
+          state.includes(draft) ||
+          state.some((order) => order.id === draft.id)
+        ) {
+          toast.warning(
+            "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+          );
+          return state;
+        } else {
+          toast.success("Produto adicionado ao carrinho!");
+          return [...state, draft];
+        }
+      }
+
+      if (action.type === "REMOVE_ITEM_FROM_CART") {
+        const clickedItem = action.payload.item;
+
+        const draft = state.filter((order) => order.id !== clickedItem.id);
+
+        return draft;
+      }
+
+      if (action.type === "CHECKOUT_INCREASE_ITEM_QUANTITY") {
+        const clickedItem = action.payload.clickedItem;
+
+        state = state.map((prevState: any) => {
+          if (prevState.id === clickedItem.id) {
+            return { ...prevState, amount: clickedItem.amount + 1 };
+          } else {
+            return prevState;
+          }
+        });
+      }
+
+      if (action.type === "CHECKOUT_DECREASE_ITEM_QUANTITY") {
+        const clickedItem = action.payload.clickedItem;
+
+        state = state.map((prevState: any) => {
+          if (prevState.id === clickedItem.id && prevState.amount > 1) {
+            return { ...prevState, amount: clickedItem.amount - 1 };
+          } else {
+            return prevState;
+          }
+        });
+      }
+
+      if (action.type === "INCREASE_ITEM_QUANTITY") {
+        const draft = action.payload.draft;
+        const clickedItem = action.payload.clickedItem;
+
+        console.log(draft, "aqui o draft");
+        // console.log(clickedItem, "o item q foi clicado");
+
+        const updatedState = draft.map((item: any) => {
+          if (item.id === clickedItem.id) {
+            // Modify the item and return it
+            return { ...item, amount: item.amount + 1 };
+          }
+          // Return the original item if no modification is needed
+          return item;
+        });
+
+        return updatedState;
+      }
+
+      if (action.type === "DECREASE_ITEM_QUANTITY") {
+        const clickedItem = action.payload.clickedItem;
+        const draft = action.payload.draft;
+
+        console.log(draft, "dragt");
+        console.log(clickedItem, "item clicado");
+
+        if (draft === clickedItem.id) {
+          return { ...state, amount: clickedItem.amount + 1 };
+        }
+        return state;
+      }
 
       return state;
     },
     []
   );
 
-  // const [order, dispatch] = useReducer((state: OrderProps[], action: any) => {
-  //   console.log(state, "aqui a order");
-  //   console.log(action, "dispatch");
-
-  //   if (action.type === "HANDLE_CART") {
-  //     return [...state, action.payload.draft];
-  //   }
-
-  //   if (action.type === "REMOVE_ITEM_FROM_CART") {
-  //     return [...state, action.payload.draft];
-  //   }
-
-  //   return state;
-  // }, []);
+  useEffect(() => console.log(setNewOrder), [setNewOrder]);
 
   const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
 
@@ -101,24 +170,24 @@ export function App() {
   const [totalPrice, setTotalPrice] = useState<string>("");
 
   useEffect(() => {
-    if (!order.length) {
+    if (!setNewOrder.length) {
       setCartTotalAmount(0);
       setTotalPrice("0");
       return;
     }
 
-    const cartTotalAmount = order.reduce((acc, curr) => {
+    const cartTotalAmount = setNewOrder.reduce((acc, curr) => {
       return acc + curr.amount;
     }, 0);
 
-    const calculateTotal = order.reduce((sum, item) => {
+    const calculateTotal = setNewOrder.reduce((sum, item) => {
       const price = item.price.replace(",", ".");
       return sum + parseFloat(price) * item.amount;
     }, 0);
 
     setCartTotalAmount(cartTotalAmount);
     setTotalPrice(calculateTotal.toFixed(2));
-  }, [order, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
+  }, [setNewOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   function handleCart(item: any) {
     const draft = cartItems.find((order) => order.id === item.id);
@@ -135,20 +204,20 @@ export function App() {
       },
     });
 
-    setOrder((prevState: any) => {
-      if (
-        prevState.includes(draft) ||
-        prevState.some((order: any) => order.id === item.id)
-      ) {
-        toast.warning(
-          "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
-        );
-        return prevState;
-      } else {
-        toast.success("Produto adicionado ao carrinho!");
-        return [...prevState, draft];
-      }
-    });
+    // setOrder((prevState: any) => {
+    //   if (
+    //     prevState.includes(draft) ||
+    //     prevState.some((order: any) => order.id === item.id)
+    //   ) {
+    //     toast.warning(
+    //       "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
+    //     );
+    //     return prevState;
+    //   } else {
+    //     toast.success("Produto adicionado ao carrinho!");
+    //     return [...prevState, draft];
+    //   }
+    // });
   }
 
   function handleOrder() {
@@ -199,44 +268,60 @@ export function App() {
   }
 
   function removeItemFromCart(item: any) {
-    console.log(item, "aqui ");
-    const draft = order.filter((order) => order.id !== item.id);
-
-    setOrder(draft);
-    // dispatch({
-    //   type: "REMOVE_ITEM_FROM_CART",
-    //   payload: {
-    //     draft,
-    //   },
-    // });
+    dispatch({
+      type: "REMOVE_ITEM_FROM_CART",
+      payload: {
+        item,
+      },
+    });
   }
 
   function handleIncreaseAmount(item: any) {
-    setCartItems((prevCartItems) => {
-      const updatedCartItems = prevCartItems.map((card) => {
-        if (card.id === item.id) {
-          return { ...card, amount: card.amount + 1 };
-        }
-        return card;
-      });
+    const draft = cartItems;
 
-      return updatedCartItems;
+    dispatch({
+      type: "INCREASE_ITEM_QUANTITY",
+      payload: {
+        clickedItem: item,
+        draft,
+      },
     });
+
+    // setCartItems((prevCartItems) => {
+    //   const updatedCartItems = prevCartItems.map((card) => {
+    //     if (card.id === item.id) {
+    //       return { ...card, amount: card.amount + 1 };
+    //     }
+    //     return card;
+    //   });
+
+    //   return updatedCartItems;
+    // });
   }
 
   function handleDecreaseAmount(item: any) {
-    setCartItems((prevCartItems: any) => {
-      const updatedCartItems = prevCartItems.map((card: any) => {
-        if (card.id === item.id && card.amount > 0) {
-          const draft = { ...card, amount: card.amount - 1 };
+    const draft = cartItems.find((order) => order.id === item.id);
 
-          return draft;
-        }
-        return card;
-      });
-
-      return updatedCartItems;
+    dispatch({
+      type: "DECREASE_ITEM_QUANTITY",
+      payload: {
+        clickedItem: item,
+        draft,
+      },
     });
+
+    // setCartItems((prevCartItems: any) => {
+    //   const updatedCartItems = prevCartItems.map((card: any) => {
+    //     if (card.id === item.id && card.amount > 0) {
+    //       const draft = { ...card, amount: card.amount - 1 };
+
+    //       return draft;
+    //     }
+    //     return card;
+    //   });
+
+    //   return updatedCartItems;
+    // });
   }
 
   return (
@@ -263,6 +348,8 @@ export function App() {
           setOrder,
           totalPrice,
           finalOrder,
+          setNewOrder,
+          dispatch,
         }}
       >
         <BrowserRouter>
