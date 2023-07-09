@@ -120,20 +120,36 @@ export function App() {
       }
 
       if (action.type === "INCREASE_ITEM_QUANTITY") {
+        const draft = action.payload.draft;
+        const clickedItem = action.payload.clickedItem;
+
+        console.log(draft, "aqui o draft");
+        // console.log(clickedItem, "o item q foi clicado");
+
+        const updatedState = draft.map((item: any) => {
+          if (item.id === clickedItem.id) {
+            // Modify the item and return it
+            return { ...item, amount: item.amount + 1 };
+          }
+          // Return the original item if no modification is needed
+          return item;
+        });
+
+        return updatedState;
+      }
+
+      if (action.type === "DECREASE_ITEM_QUANTITY") {
         const clickedItem = action.payload.clickedItem;
         const draft = action.payload.draft;
-        // console.log(draft, "draft here");
-        // console.log(clickedItem, "clicked here");
+
+        console.log(draft, "dragt");
+        console.log(clickedItem, "item clicado");
 
         if (draft === clickedItem.id) {
           return { ...state, amount: clickedItem.amount + 1 };
         }
         return state;
       }
-
-      // if (action.type === "DECREASE_ITEM_QUANTITY") {
-      //   const clickedItem = action.payload.clickedItem;
-      // }
 
       return state;
     },
@@ -261,7 +277,7 @@ export function App() {
   }
 
   function handleIncreaseAmount(item: any) {
-    const draft = cartItems.find((order) => order.id === item.id);
+    const draft = cartItems;
 
     dispatch({
       type: "INCREASE_ITEM_QUANTITY",
@@ -271,38 +287,41 @@ export function App() {
       },
     });
 
-    setCartItems((prevCartItems) => {
-      const updatedCartItems = prevCartItems.map((card) => {
-        if (card.id === item.id) {
-          return { ...card, amount: card.amount + 1 };
-        }
-        return card;
-      });
+    // setCartItems((prevCartItems) => {
+    //   const updatedCartItems = prevCartItems.map((card) => {
+    //     if (card.id === item.id) {
+    //       return { ...card, amount: card.amount + 1 };
+    //     }
+    //     return card;
+    //   });
 
-      return updatedCartItems;
-    });
+    //   return updatedCartItems;
+    // });
   }
 
   function handleDecreaseAmount(item: any) {
+    const draft = cartItems.find((order) => order.id === item.id);
+
     dispatch({
       type: "DECREASE_ITEM_QUANTITY",
       payload: {
         clickedItem: item,
+        draft,
       },
     });
 
-    setCartItems((prevCartItems: any) => {
-      const updatedCartItems = prevCartItems.map((card: any) => {
-        if (card.id === item.id && card.amount > 0) {
-          const draft = { ...card, amount: card.amount - 1 };
+    // setCartItems((prevCartItems: any) => {
+    //   const updatedCartItems = prevCartItems.map((card: any) => {
+    //     if (card.id === item.id && card.amount > 0) {
+    //       const draft = { ...card, amount: card.amount - 1 };
 
-          return draft;
-        }
-        return card;
-      });
+    //       return draft;
+    //     }
+    //     return card;
+    //   });
 
-      return updatedCartItems;
-    });
+    //   return updatedCartItems;
+    // });
   }
 
   return (
