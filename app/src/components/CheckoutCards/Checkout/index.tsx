@@ -1,6 +1,11 @@
 //* Utils
 import { useContext } from "react";
 
+import {
+  decreaseAmountAction,
+  increaseAmountAction,
+} from "../../../reducers/cart/actions";
+
 //* Styles
 import { CardBlock } from "../Form/styles";
 import { Card } from "../styles";
@@ -17,51 +22,39 @@ import { Minus, Plus, Trash } from "phosphor-react";
 import { ThreeDots } from "react-loader-spinner";
 
 //* Component
-import { CartContext } from "../../../App";
+import { CartContext, OrderProps } from "../../../App";
 import { NavLink } from "react-router-dom";
 
 export function CheckoutCard() {
   const {
-    order,
     removeItemFromCart,
     handleOrder,
-    setOrder,
     cartTotalAmount,
     totalPrice,
     dataCep,
     loading,
-    setNewOrder,
+    newOrder,
     dispatch,
   } = useContext(CartContext);
 
-  function decreaseAmount(item: any) {
-    dispatch({
-      type: "CHECKOUT_DECREASE_ITEM_QUANTITY",
-      payload: {
-        clickedItem: item,
-      },
-    });
+  function decreaseAmount(item: OrderProps) {
+    dispatch(decreaseAmountAction(item));
   }
 
-  function increaseAmount(item: any) {
-    dispatch({
-      type: "CHECKOUT_INCREASE_ITEM_QUANTITY",
-      payload: {
-        clickedItem: item,
-      },
-    });
+  function increaseAmount(item: OrderProps) {
+    dispatch(increaseAmountAction(item));
   }
 
   return (
     <Card>
       <h3>Cafés selecionados</h3>
 
-      {!setNewOrder.length ? (
+      {!newOrder.length ? (
         <p>Nenhum item selecionado</p>
       ) : (
         <CardBlock>
           <CardCheckout>
-            {setNewOrder.map((item: any) => {
+            {newOrder.map((item: any) => {
               return (
                 <>
                   <CardCheckoutItem key={item.title}>
@@ -122,7 +115,7 @@ export function CheckoutCard() {
             </div>
           </CheckoutAmount>
 
-          <NavLink to="/success">
+          <NavLink to="/success" id="confirmOrder">
             <CheckoutButton onClick={() => handleOrder()} type="button">
               {loading ? (
                 <ThreeDots

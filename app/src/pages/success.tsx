@@ -20,7 +20,6 @@ interface StatusProps {
 
 export function Success() {
   const { finalOrder, loading } = useContext(CartContext);
-  console.log(finalOrder, "aqui ");
 
   const status: StatusProps = [
     {
@@ -81,7 +80,7 @@ export function Success() {
                         ) : (
                           <span>
                             <span>
-                              <b>{finalOrder.address.metodoPagamento}</b>
+                              <b>{finalOrder.metodoPagamento}</b>
                             </span>
                           </span>
                         )}

@@ -50,6 +50,8 @@ export const SuccessSteps = styled.div`
     justify-content: center;
     align-items: center;
     padding: 0.5rem;
+    width: 40px;
+    height: 40px;
 
     svg {
       color: ${(props) => props.theme.white};

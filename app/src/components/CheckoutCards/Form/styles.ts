@@ -32,6 +32,10 @@ export const CardBlock = styled.div`
     }
   }
 
+  & > a#confirmOrder {
+    text-decoration: none;
+  }
+
   form {
     padding: 2rem 0 0;
     display: grid;
@@ -100,13 +104,12 @@ export const PaymentButton = styled.label`
     filter: brightness(0.9);
   }
 
-  /* input {
+  input {
     display: none;
-  } */
+  }
 
-  /* &#isChecked {
-    outline: none !important;
-    border: 1px solid red;
-    box-shadow: 0 0 10px #719ece;
-  } */
+  &.isChecked {
+    outline: none;
+    box-shadow: 0 0 2px 1px ${(props) => props.theme["secondary-500"]};
+  }
 `;

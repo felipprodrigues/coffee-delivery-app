@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -12,6 +12,7 @@ import {
 import { Card } from "../styles";
 import { CardBlock, CardPaymentMethod, PaymentButton } from "./styles";
 import { CartContext } from "../../../App";
+import { useAsyncError } from "react-router-dom";
 
 interface PaymentProps {
   id: string;
@@ -20,6 +21,12 @@ interface PaymentProps {
 }
 
 export function FormCard() {
+  const [checkedInput, setChecketInput] = useState("");
+
+  useEffect(() => {
+    console.log(checkedInput);
+  }, [checkedInput]);
+
   const {
     addressNumber,
     setAddressNumber,
@@ -34,35 +41,27 @@ export function FormCard() {
     {
       id: uuidv4(),
       icon: <CreditCard size={24} />,
-      label: "cartão de crédito",
+      label: "Cartão de Crédito",
     },
     {
       id: uuidv4(),
       icon: <Money size={24} />,
-      label: "cartão de débito",
+      label: "Cartão de Débito",
     },
     {
       id: uuidv4(),
       icon: <Bank size={24} />,
-      label: "dinheiro",
+      label: "Dinheiro",
     },
   ];
 
-  // const [inputChecked, setInputChecked] = useState(false);
-
-  // function handleInput(param: any, item: any) {
-  //   console.log(item, "aqui");
-  //   const findItem = paymentMethodCards.find((method) => method.id === item.id);
-
-  //   if (findItem) {
-  //     setInputChecked(true);
-  //   }
-  //   // setInputChecked(itemId);
-  // }
-
-  // useEffect(() => {
-  //   console.log(inputChecked, "aqui o efect");
-  // }, [inputChecked]);
+  function handlePaymentMethod(item: object[]) {
+    if (item) {
+      setChecketInput(item.target.value);
+    } else {
+      return;
+    }
+  }
 
   return (
     <Card>
@@ -159,15 +158,16 @@ export function FormCard() {
           {paymentMethodCards.map((item) => {
             return (
               <PaymentButton
-              // className={inputChecked ? "isChecked" : ""}
+                className={checkedInput === item.label ? "isChecked" : ""}
               >
                 {item.icon}
                 <input
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={() => {
+                  onChange={(e) => {
                     setPaymentMethod(item.label);
+                    handlePaymentMethod(e);
                   }}
                   value={item.label}
                 />

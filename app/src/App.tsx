@@ -5,6 +5,11 @@ import { Router } from "./Router";
 
 //* Context
 import { createContext, useEffect, useReducer, useState } from "react";
+import {
+  handleCartAction,
+  removeItemFromCartAction,
+} from "./reducers/cart/actions";
+import { CartReducer } from "./reducers/cart/reducer";
 
 //* Themes
 import { ThemeProvider } from "styled-components";
@@ -16,28 +21,37 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 interface CartProps {
-  cartTotalAmount: number;
-  cartItems: CardProps[];
+  // FUNCTIONS
   handleCart: (item: any) => void;
   removeItemFromCart: (item: any) => void;
   fetchAddress: (item: any) => void;
-  addressNumber: string;
   setAddressNumber: React.Dispatch<React.SetStateAction<string>>;
-  addressDetails: string;
   setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
+  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
+  handleIncreaseAmount: (item: any) => void;
+  handleDecreaseAmount: (item: any) => void;
+  handleOrder: (item?: any) => void;
+  dispatch: React.Dispatch<React.SetStateAction<string[]>>;
+  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
+  // STATES
+  cartTotalAmount: number;
+  cartItems: CardProps[];
+  addressNumber: string;
+  addressDetails: string;
   dataCep: object[];
   loading: boolean;
   paymentMethod: string;
-  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
-  handlePayment: React.Dispatch<React.SetStateAction<string>>;
-  handleIncreaseAmount: (item: any) => void;
-  handleDecreaseAmount: (item: any) => void;
-  order: object[];
-  handleOrder: (item?: any) => void;
-  setOrder: React.Dispatch<React.SetStateAction<string[]>>;
   totalPrice: string;
-  finalOrder: object[];
-  setNewOrder: object[];
+  finalOrder: OrderProps[];
+  newOrder: object[];
+}
+
+export interface OrderProps {
+  address?: AddressProps;
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
 }
 
 export interface AddressProps {
@@ -50,85 +64,19 @@ export interface AddressProps {
   complemento?: string;
   metodoPagamento: string;
 }
-export interface OrderProps {
-  address?: AddressProps;
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
-}
 
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
+  const [loading, setLoading] = useState(false);
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
-  const [order, setOrder] = useState<OrderProps[]>([]);
 
-  const [setNewOrder, dispatch] = useReducer(
-    (state: OrderProps[], action: any) => {
-      // console.log(state, "aqui os estados");
-      // console.log(action.payload, "aqui actions");
+  // Reducer
+  const [newOrder, dispatch] = useReducer(CartReducer, []);
 
-      if (action.type === "HANDLE_CART") {
-        const draft = action.payload.draft;
-
-        if (
-          state.includes(draft) ||
-          state.some((order) => order.id === draft.id)
-        ) {
-          toast.warning(
-            "Produto já adicionado. Vá até a página de checkout para alterar a quantidade"
-          );
-          return state;
-        } else {
-          toast.success("Produto adicionado ao carrinho!");
-          return [...state, draft];
-        }
-      }
-
-      if (action.type === "REMOVE_ITEM_FROM_CART") {
-        const clickedItem = action.payload.item;
-
-        const draft = state.filter((order) => order.id !== clickedItem.id);
-
-        return draft;
-      }
-
-      if (action.type === "CHECKOUT_INCREASE_ITEM_QUANTITY") {
-        const clickedItem = action.payload.clickedItem;
-
-        state = state.map((prevState: any) => {
-          if (prevState.id === clickedItem.id) {
-            return { ...prevState, amount: clickedItem.amount + 1 };
-          } else {
-            return prevState;
-          }
-        });
-      }
-
-      if (action.type === "CHECKOUT_DECREASE_ITEM_QUANTITY") {
-        const clickedItem = action.payload.clickedItem;
-
-        state = state.map((prevState: any) => {
-          if (prevState.id === clickedItem.id && prevState.amount > 1) {
-            return { ...prevState, amount: clickedItem.amount - 1 };
-          } else {
-            return prevState;
-          }
-        });
-      }
-
-      return state;
-    },
-    []
-  );
-
-  useEffect(() => console.log(setNewOrder), [setNewOrder]);
-
-  const [finalOrder, setFinalOrder] = useState<OrderProps>([]);
-
-  const [loading, setLoading] = useState(false);
+  // Final order
+  const [finalOrder, setFinalOrder] = useState<OrderProps[]>([]);
 
   // FORM STATES
   const [dataCep, setDataCep] = useState<object[]>([]);
@@ -138,26 +86,39 @@ export function App() {
   const [totalPrice, setTotalPrice] = useState<string>("");
 
   useEffect(() => {
-    if (!setNewOrder.length) {
+    if (!newOrder.length) {
       setCartTotalAmount(0);
       setTotalPrice("0");
       return;
     }
 
-    const cartTotalAmount = setNewOrder.reduce((acc, curr) => {
+    const cartTotalAmount = newOrder.reduce((acc, curr) => {
       return acc + curr.amount;
     }, 0);
 
-    const calculateTotal = setNewOrder.reduce((sum, item) => {
+    const calculateTotal = newOrder.reduce((sum, item) => {
       const price = item.price.replace(",", ".");
       return sum + parseFloat(price) * item.amount;
     }, 0);
 
     setCartTotalAmount(cartTotalAmount);
     setTotalPrice(calculateTotal.toFixed(2));
-  }, [setNewOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
+    console.log(finalOrder, "final aqui");
+  }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
-  function handleCart(item: any) {
+  async function fetchAddress(cep: string) {
+    const header = {
+      headers: {
+        Accept: "application/json",
+      },
+    };
+
+    const response = await axios.get(`http://cep.la/${cep}`, header);
+
+    setDataCep(response.data);
+  }
+
+  function handleCart(item: CardProps) {
     const draft = cartItems.find((order) => order.id === item.id);
 
     if (draft?.amount === 0) {
@@ -165,12 +126,7 @@ export function App() {
       return;
     }
 
-    dispatch({
-      type: "HANDLE_CART",
-      payload: {
-        draft,
-      },
-    });
+    dispatch(handleCartAction(draft));
   }
 
   function handleOrder() {
@@ -190,7 +146,7 @@ export function App() {
     };
 
     const orderData: OrderProps = {
-      ...setNewOrder,
+      ...newOrder,
       address: newCepData,
       metodoPagamento: paymentMethod,
     };
@@ -202,31 +158,15 @@ export function App() {
       setLoading(false);
       toast.success("Pedido registrado com sucesso!");
     }, 1000);
+
+    setDataCep([]);
+    setAddressNumber("");
+    setPaymentMethod("");
+    setTotalPrice("");
   }
 
-  useEffect(() => {
-    console.log(finalOrder, "final aqui");
-  }, [finalOrder]);
-
-  async function fetchAddress(cep: string) {
-    const header = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
-
-    const response = await axios.get(`http://cep.la/${cep}`, header);
-
-    setDataCep(response.data);
-  }
-
-  function removeItemFromCart(item: any) {
-    dispatch({
-      type: "REMOVE_ITEM_FROM_CART",
-      payload: {
-        item,
-      },
-    });
+  function removeItemFromCart(item: CardProps) {
+    dispatch(removeItemFromCartAction(item));
   }
 
   function handleIncreaseAmount(item: any) {
@@ -263,26 +203,26 @@ export function App() {
       <CartContext.Provider
         value={{
           handleCart,
-          cartTotalAmount,
-          cartItems,
           removeItemFromCart,
           fetchAddress,
-          addressNumber,
           setAddressNumber,
-          addressDetails,
           setAddressDetails,
-          dataCep,
-          loading,
           setPaymentMethod,
           handleIncreaseAmount,
           handleDecreaseAmount,
-          order,
           handleOrder,
-          setOrder,
+          dispatch,
+          setFinalOrder,
+          cartTotalAmount,
+          cartItems,
+          addressNumber,
+          addressDetails,
+          dataCep,
+          loading,
+          paymentMethod,
           totalPrice,
           finalOrder,
-          setNewOrder,
-          dispatch,
+          newOrder,
         }}
       >
         <BrowserRouter>
