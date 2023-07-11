@@ -15,7 +15,7 @@ import { CartReducer } from "./reducers/cart/reducer";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
-import { CardProps, CardProps, cardData } from "./components/Cards/constants";
+import { CardProps, cardData } from "./components/Cards/constants";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
