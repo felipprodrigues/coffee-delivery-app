@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { OrderProps } from "../../App";
 import { ActionTypes } from "./actions";
 
-export function CartReducer(state: OrderProps[], action: any) {
+export function CartReducer(state: OrderProps[], action: any): OrderProps[] {
   switch (action.type) {
     case ActionTypes.HANDLE_CART: {
       const draft = action.payload.draft;

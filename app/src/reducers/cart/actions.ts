@@ -6,7 +6,7 @@ export enum ActionTypes {
   EMPTY_CART = "EMPTY_CART",
 }
 
-export function decreaseAmountAction(item: any) {
+export function decreaseAmountAction(item: object[]) {
   return {
     type: ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY,
     payload: {
@@ -15,7 +15,7 @@ export function decreaseAmountAction(item: any) {
   };
 }
 
-export function increaseAmountAction(item: any) {
+export function increaseAmountAction(item: object[]) {
   return {
     type: ActionTypes.CHECKOUT_INCREASE_ITEM_QUANTITY,
     payload: {
@@ -24,7 +24,7 @@ export function increaseAmountAction(item: any) {
   };
 }
 
-export function handleCartAction(draft: any) {
+export function handleCartAction(draft: object[]) {
   return {
     type: ActionTypes.HANDLE_CART,
     payload: {
@@ -33,7 +33,7 @@ export function handleCartAction(draft: any) {
   };
 }
 
-export function removeItemFromCartAction(item: any) {
+export function removeItemFromCartAction(item: object[]) {
   return {
     type: ActionTypes.REMOVE_ITEM_FROM_CART,
     payload: {

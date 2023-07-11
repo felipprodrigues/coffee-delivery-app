@@ -15,7 +15,7 @@ import { CartReducer } from "./reducers/cart/reducer";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
-import { CardProps, cardData } from "./components/Cards/constants";
+import { CardProps, CardProps, cardData } from "./components/Cards/constants";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,26 +32,18 @@ interface CartProps {
   handleDecreaseAmount: (item: any) => void;
   handleOrder: (item?: any) => void;
   dispatch: React.Dispatch<React.SetStateAction<string[]>>;
-  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
+  setFinalOrder: React.Dispatch<React.SetStateAction<object[]>>;
   // STATES
   cartTotalAmount: number;
   cartItems: CardProps[];
   addressNumber: string;
   addressDetails: string;
-  dataCep: object[];
+  dataCep: AddressProps;
   loading: boolean;
   paymentMethod: string;
   totalPrice: string;
   finalOrder: OrderProps[];
-  newOrder: object[];
-}
-
-export interface OrderProps {
-  address?: AddressProps;
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
+  newOrder: AddressProps[];
 }
 
 export interface AddressProps {
@@ -62,7 +54,15 @@ export interface AddressProps {
   logradouro: string;
   numero?: string;
   complemento?: string;
-  metodoPagamento: string;
+  metodoPagamento?: string;
+}
+
+export interface OrderProps {
+  address?: AddressProps[];
+  id: string;
+  title: string;
+  price: string;
+  amount: number;
 }
 
 export const CartContext = createContext({} as CartProps);
@@ -92,11 +92,11 @@ export function App() {
       return;
     }
 
-    const cartTotalAmount = newOrder.reduce((acc, curr) => {
+    const cartTotalAmount = newOrder.reduce((acc: number, curr: OrderProps) => {
       return acc + curr.amount;
     }, 0);
 
-    const calculateTotal = newOrder.reduce((sum, item) => {
+    const calculateTotal = newOrder.reduce((sum: number, item: OrderProps) => {
       const price = item.price.replace(",", ".");
       return sum + parseFloat(price) * item.amount;
     }, 0);
@@ -169,7 +169,7 @@ export function App() {
     dispatch(removeItemFromCartAction(item));
   }
 
-  function handleIncreaseAmount(item: any) {
+  function handleIncreaseAmount(item: CardProps) {
     setCartItems((prevCartItems) => {
       const updatedCartItems = prevCartItems.map((card) => {
         if (card.id === item.id) {
@@ -182,7 +182,7 @@ export function App() {
     });
   }
 
-  function handleDecreaseAmount(item: any) {
+  function handleDecreaseAmount(item: CardProps) {
     setCartItems((prevCartItems: any) => {
       const updatedCartItems = prevCartItems.map((card: any) => {
         if (card.id === item.id && card.amount > 0) {

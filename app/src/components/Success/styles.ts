@@ -44,7 +44,7 @@ export const SuccessSteps = styled.div`
   gap: 1rem;
 
   & > div:first-of-type {
-    background-color: ${(props) => props.bgColor};
+    background-color: ${(props) => props.color};
     border-radius: 100%;
     display: flex;
     justify-content: center;

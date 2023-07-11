@@ -16,16 +16,17 @@ interface StatusProps {
   icon: ReactElement;
   msg: string;
   bgColor: string;
+  status?: string;
 }
 
 export function Success() {
   const { finalOrder, loading } = useContext(CartContext);
+  console.log(finalOrder, "aqui ");
 
-  const status: StatusProps = [
+  const status: StatusProps[] = [
     {
       icon: <MapPin size={24} />,
       msg: "Entrega em ",
-      status: "",
       bgColor: "#8047F8",
     },
     {
@@ -53,19 +54,19 @@ export function Success() {
             <SuccessCard>
               <div>
                 {status.map((item: any, index: number) => (
-                  <SuccessSteps bgColor={item.bgColor}>
+                  <SuccessSteps color={item.bgColor}>
                     <div>{item.icon}</div>
                     {index === 0 ? (
                       <div>
                         <span>
                           {item.msg}
                           <span>
-                            <b>{finalOrder.address.logradouro}</b>
+                            <b>{finalOrder?.address.logradouro}</b>
                           </span>
                         </span>
                         <span>
-                          {finalOrder.address.bairro} -{" "}
-                          {finalOrder.address.cidade}, {finalOrder.address.uf}
+                          {finalOrder?.address.bairro} -{" "}
+                          {finalOrder?.address.cidade}, {finalOrder?.address.uf}
                         </span>
                       </div>
                     ) : (

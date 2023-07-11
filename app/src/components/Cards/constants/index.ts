@@ -22,6 +22,7 @@ export interface CardProps {
   image: string;
   price: string;
   amount: number;
+  isSmall?: boolean;
 }
 
 export const cardData: CardProps[] = [
