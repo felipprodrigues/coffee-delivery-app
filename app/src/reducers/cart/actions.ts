@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export enum ActionTypes {
   HANDLE_CART = "HANDLE_CART",
   REMOVE_ITEM_FROM_CART = "REMOVE_ITEM_FROM_CART",
@@ -6,7 +7,7 @@ export enum ActionTypes {
   EMPTY_CART = "EMPTY_CART",
 }
 
-export function decreaseAmountAction(item: object[]) {
+export function decreaseAmountAction(item: any) {
   return {
     type: ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY,
     payload: {
@@ -15,7 +16,7 @@ export function decreaseAmountAction(item: object[]) {
   };
 }
 
-export function increaseAmountAction(item: object[]) {
+export function increaseAmountAction(item: any) {
   return {
     type: ActionTypes.CHECKOUT_INCREASE_ITEM_QUANTITY,
     payload: {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //* Utils
 import { useContext } from "react";
 
@@ -37,13 +38,15 @@ export function CheckoutCard() {
     dispatch,
   } = useContext(CartContext);
 
-  function decreaseAmount(item: OrderProps) {
+  function decreaseAmount(item: OrderProps): void {
     dispatch(decreaseAmountAction(item));
   }
 
-  function increaseAmount(item: OrderProps) {
+  function increaseAmount(item: OrderProps): void {
     dispatch(increaseAmountAction(item));
   }
+  const isButton = true;
+  const isSmall = false;
 
   return (
     <Card>
@@ -64,7 +67,7 @@ export function CheckoutCard() {
                       <span>{item.title}</span>
 
                       <div>
-                        <CardSelectAmount>
+                        <CardSelectAmount isSmall={isSmall} isButton={isButton}>
                           <Minus
                             size={16}
                             onClick={() => decreaseAmount(item)}

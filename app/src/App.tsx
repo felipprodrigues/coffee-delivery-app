@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //* Routing
 import { BrowserRouter } from "react-router-dom";
 
@@ -106,7 +108,7 @@ export function App() {
     console.log(finalOrder, "final aqui");
   }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
-  async function fetchAddress(cep: string) {
+  async function fetchAddress(cep: string): Promise<void> {
     const header = {
       headers: {
         Accept: "application/json",
@@ -118,8 +120,13 @@ export function App() {
     setDataCep(response.data);
   }
 
-  function handleCart(item: CardProps) {
-    const draft = cartItems.find((order) => order.id === item.id);
+  function handleCart(item: any): void {
+    const draft: any = cartItems.find((order) => order.id === item.id);
+
+    if (!draft) {
+      toast.warning("Item não encontrado no carrinho");
+      return;
+    }
 
     if (draft?.amount === 0) {
       toast.warning("Adicione ao menos um item ao carrinho");
@@ -129,7 +136,7 @@ export function App() {
     dispatch(handleCartAction(draft));
   }
 
-  function handleOrder() {
+  function handleOrder(): void {
     if (!dataCep?.cep) {
       toast.error("Preencha o formulário");
       return;

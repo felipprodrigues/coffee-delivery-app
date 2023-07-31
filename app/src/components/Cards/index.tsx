@@ -15,6 +15,9 @@ export function Cards() {
   const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =
     useContext(CartContext);
 
+  const isButton = true;
+  const isSmall = true;
+
   const allCards = cartItems.map((card: CardProps) => {
     return (
       <Card>
@@ -46,7 +49,7 @@ export function Cards() {
             R$ <h2>{card.price}</h2>
           </span>
 
-          <CardSelectAmount>
+          <CardSelectAmount isButton={isButton} isSmall={isSmall}>
             <Minus size={16} onClick={() => handleDecreaseAmount(card)} />
             <span>{card.amount}</span>
             <Plus size={16} onClick={() => handleIncreaseAmount(card)} />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useContext, useEffect, useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
@@ -12,7 +13,6 @@ import {
 import { Card } from "../styles";
 import { CardBlock, CardPaymentMethod, PaymentButton } from "./styles";
 import { CartContext } from "../../../App";
-import { useAsyncError } from "react-router-dom";
 
 interface PaymentProps {
   id: string;
@@ -55,7 +55,7 @@ export function FormCard() {
     },
   ];
 
-  function handlePaymentMethod(item: object[]) {
+  function handlePaymentMethod(item: any) {
     if (item) {
       setChecketInput(item.target.value);
     } else {
@@ -165,7 +165,7 @@ export function FormCard() {
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     setPaymentMethod(item.label);
                     handlePaymentMethod(e);
                   }}
