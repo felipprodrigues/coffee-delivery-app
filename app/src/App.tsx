@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+ 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //* Routing
 import { BrowserRouter } from "react-router-dom";

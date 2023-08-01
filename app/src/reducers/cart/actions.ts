@@ -1,6 +1,6 @@
 import { OrderProps } from "../../App";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 export enum ActionTypes {
   HANDLE_CART = "HANDLE_CART",
   REMOVE_ITEM_FROM_CART = "REMOVE_ITEM_FROM_CART",
