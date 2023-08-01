@@ -1,6 +1,5 @@
 import { OrderProps } from "../../App";
 
- 
 export enum ActionTypes {
   HANDLE_CART = "HANDLE_CART",
   REMOVE_ITEM_FROM_CART = "REMOVE_ITEM_FROM_CART",
