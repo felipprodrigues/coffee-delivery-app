@@ -1,3 +1,5 @@
+ 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //* Routing
 import { BrowserRouter } from "react-router-dom";
 
@@ -32,7 +34,7 @@ interface CartProps {
   handleDecreaseAmount: (item: any) => void;
   handleOrder: (item?: any) => void;
   dispatch: React.Dispatch<React.SetStateAction<string[]>>;
-  setFinalOrder: React.Dispatch<React.SetStateAction<object[]>>;
+  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
   // STATES
   cartTotalAmount: number;
   cartItems: CardProps[];
@@ -43,7 +45,7 @@ interface CartProps {
   paymentMethod: string;
   totalPrice: string;
   finalOrder: OrderProps[];
-  newOrder: AddressProps[];
+  newOrder: OrderProps[];
 }
 
 export interface AddressProps {
@@ -79,11 +81,17 @@ export function App() {
   const [finalOrder, setFinalOrder] = useState<OrderProps[]>([]);
 
   // FORM STATES
-  const [dataCep, setDataCep] = useState<object[]>([]);
+  const [dataCep, setDataCep] = useState<AddressProps>({
+    cep: "",
+    bairro: "",
+    cidade: "",
+    uf: "",
+    logradouro: "",
+  });
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalPrice, setTotalPrice] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState("");
 
   useEffect(() => {
     if (!newOrder.length) {
@@ -106,7 +114,7 @@ export function App() {
     console.log(finalOrder, "final aqui");
   }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
-  async function fetchAddress(cep: string) {
+  async function fetchAddress(cep: string): Promise<void> {
     const header = {
       headers: {
         Accept: "application/json",
@@ -118,8 +126,13 @@ export function App() {
     setDataCep(response.data);
   }
 
-  function handleCart(item: CardProps) {
-    const draft = cartItems.find((order) => order.id === item.id);
+  function handleCart(item: any): void {
+    const draft: any = cartItems.find((order) => order.id === item.id);
+
+    if (!draft) {
+      toast.warning("Item não encontrado no carrinho");
+      return;
+    }
 
     if (draft?.amount === 0) {
       toast.warning("Adicione ao menos um item ao carrinho");
@@ -129,7 +142,7 @@ export function App() {
     dispatch(handleCartAction(draft));
   }
 
-  function handleOrder() {
+  function handleOrder(): void {
     if (!dataCep?.cep) {
       toast.error("Preencha o formulário");
       return;
@@ -145,7 +158,7 @@ export function App() {
       complemento: addressDetails,
     };
 
-    const orderData: OrderProps = {
+    const orderData = {
       ...newOrder,
       address: newCepData,
       metodoPagamento: paymentMethod,
@@ -159,13 +172,19 @@ export function App() {
       toast.success("Pedido registrado com sucesso!");
     }, 1000);
 
-    setDataCep([]);
+    setDataCep({
+      cep: "",
+      bairro: "",
+      cidade: "",
+      uf: "",
+      logradouro: "",
+    });
     setAddressNumber("");
     setPaymentMethod("");
     setTotalPrice("");
   }
 
-  function removeItemFromCart(item: CardProps) {
+  function removeItemFromCart(item: any) {
     dispatch(removeItemFromCartAction(item));
   }
 

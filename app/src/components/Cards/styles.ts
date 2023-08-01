@@ -38,7 +38,12 @@ export const CardTitle = styled.div`
   }
 `;
 
-export const CardSelectAmount = styled.div`
+interface ButtonProps {
+  isButton: boolean;
+  isSmall: boolean;
+}
+
+export const CardSelectAmount = styled.div<ButtonProps>`
   display: flex;
   align-items: center;
   gap: 0.5rem;

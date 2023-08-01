@@ -85,7 +85,11 @@ export const BannerTags = styled.div`
   }
 `;
 
-export const BannerFlag = styled.div`
+interface BannerProps {
+  bgColor: string;
+}
+
+export const BannerFlag = styled.div<BannerProps>`
   padding: 0.5rem;
   border-radius: 50%;
   background-color: ${(props) => props.bgColor};

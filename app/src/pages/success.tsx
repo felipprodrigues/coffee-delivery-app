@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Main } from "../components/CheckoutCards/styles";
 import { Container } from "../styles/global";
 
@@ -20,8 +21,7 @@ interface StatusProps {
 }
 
 export function Success() {
-  const { finalOrder, loading } = useContext(CartContext);
-  console.log(finalOrder, "aqui ");
+  const { finalOrder, loading }: any = useContext(CartContext);
 
   const status: StatusProps[] = [
     {
