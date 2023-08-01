@@ -2,8 +2,9 @@
 import { toast } from "react-toastify";
 
 import { ActionTypes } from "./actions";
+import { CardProps } from "../../components/Cards/constants";
 
-export function CartReducer(state: any, action: any): any {
+export function CartReducer(state: CardProps[], action: any): CardProps[] {
   switch (action.type) {
     case ActionTypes.HANDLE_CART: {
       const draft = action.payload.draft;

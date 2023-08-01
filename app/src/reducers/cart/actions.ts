@@ -1,3 +1,5 @@
+import { OrderProps } from "../../App";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export enum ActionTypes {
   HANDLE_CART = "HANDLE_CART",
@@ -7,7 +9,7 @@ export enum ActionTypes {
   EMPTY_CART = "EMPTY_CART",
 }
 
-export function decreaseAmountAction(item: any) {
+export function decreaseAmountAction(item: OrderProps) {
   return {
     type: ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY,
     payload: {
@@ -16,7 +18,7 @@ export function decreaseAmountAction(item: any) {
   };
 }
 
-export function increaseAmountAction(item: any) {
+export function increaseAmountAction(item: OrderProps) {
   return {
     type: ActionTypes.CHECKOUT_INCREASE_ITEM_QUANTITY,
     payload: {

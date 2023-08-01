@@ -34,7 +34,7 @@ interface CartProps {
   handleDecreaseAmount: (item: any) => void;
   handleOrder: (item?: any) => void;
   dispatch: React.Dispatch<React.SetStateAction<string[]>>;
-  setFinalOrder: React.Dispatch<React.SetStateAction<object[]>>;
+  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
   // STATES
   cartTotalAmount: number;
   cartItems: CardProps[];
@@ -45,7 +45,7 @@ interface CartProps {
   paymentMethod: string;
   totalPrice: string;
   finalOrder: OrderProps[];
-  newOrder: AddressProps[];
+  newOrder: OrderProps[];
 }
 
 export interface AddressProps {
@@ -81,11 +81,17 @@ export function App() {
   const [finalOrder, setFinalOrder] = useState<OrderProps[]>([]);
 
   // FORM STATES
-  const [dataCep, setDataCep] = useState<object[]>([]);
+  const [dataCep, setDataCep] = useState<AddressProps>({
+    cep: "",
+    bairro: "",
+    cidade: "",
+    uf: "",
+    logradouro: "",
+  });
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalPrice, setTotalPrice] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState("");
 
   useEffect(() => {
     if (!newOrder.length) {
@@ -152,7 +158,7 @@ export function App() {
       complemento: addressDetails,
     };
 
-    const orderData: OrderProps = {
+    const orderData = {
       ...newOrder,
       address: newCepData,
       metodoPagamento: paymentMethod,
@@ -166,13 +172,19 @@ export function App() {
       toast.success("Pedido registrado com sucesso!");
     }, 1000);
 
-    setDataCep([]);
+    setDataCep({
+      cep: "",
+      bairro: "",
+      cidade: "",
+      uf: "",
+      logradouro: "",
+    });
     setAddressNumber("");
     setPaymentMethod("");
     setTotalPrice("");
   }
 
-  function removeItemFromCart(item: CardProps) {
+  function removeItemFromCart(item: any) {
     dispatch(removeItemFromCartAction(item));
   }
 
