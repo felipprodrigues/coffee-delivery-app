@@ -1,4 +1,3 @@
- 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //* Routing
 import { BrowserRouter } from "react-router-dom";
@@ -115,16 +114,22 @@ export function App() {
   }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   async function fetchAddress(cep: string): Promise<void> {
-    const header = {
-      headers: {
-        Accept: "application/json",
-      },
-    };
+    // const header = {
+    //   headers: {
+    //     Accept: "application/json",
+    //   },
+    // };
 
-    const response = await axios.get(`http://cep.la/${cep}`, header);
+    const response = await axios.get(`viacep.com.br/ws/${cep}/json/`);
+    const resp = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+    // const data = await resp.json();
+    console.log(resp, "aqui");
 
-    setDataCep(response.data);
+    // setDataCep(response.data);
   }
+  useEffect(() => {
+    fetchAddress("17047001");
+  }, []);
 
   function handleCart(item: any): void {
     const draft: any = cartItems.find((order) => order.id === item.id);
