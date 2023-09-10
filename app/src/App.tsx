@@ -50,7 +50,7 @@ interface CartProps {
 export interface AddressProps {
   cep: string;
   bairro: string;
-  cidade: string;
+  localidade: string;
   uf: string;
   logradouro: string;
   numero?: string;
@@ -83,7 +83,7 @@ export function App() {
   const [dataCep, setDataCep] = useState<AddressProps>({
     cep: "",
     bairro: "",
-    cidade: "",
+    localidade: "",
     uf: "",
     logradouro: "",
   });
@@ -110,26 +110,23 @@ export function App() {
 
     setCartTotalAmount(cartTotalAmount);
     setTotalPrice(calculateTotal.toFixed(2));
-    console.log(finalOrder, "final aqui");
   }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
 
   async function fetchAddress(cep: string): Promise<void> {
-    // const header = {
-    //   headers: {
-    //     Accept: "application/json",
-    //   },
-    // };
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
 
-    const response = await axios.get(`viacep.com.br/ws/${cep}/json/`);
-    const resp = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-    // const data = await resp.json();
-    console.log(resp, "aqui");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-    // setDataCep(response.data);
+      const responseData = await response.json();
+
+      setDataCep(responseData);
+    } catch (error) {
+      console.error("Attempt to fetch CEP details:", error);
+    }
   }
-  useEffect(() => {
-    fetchAddress("17047001");
-  }, []);
 
   function handleCart(item: any): void {
     const draft: any = cartItems.find((order) => order.id === item.id);
@@ -180,7 +177,7 @@ export function App() {
     setDataCep({
       cep: "",
       bairro: "",
-      cidade: "",
+      localidade: "",
       uf: "",
       logradouro: "",
     });

@@ -8,7 +8,7 @@ export enum ActionTypes {
   EMPTY_CART = "EMPTY_CART",
 }
 
-export function decreaseAmountAction(item: OrderProps) {
+export function decreaseAmountAction(item: unknown) {
   return {
     type: ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY,
     payload: {
@@ -17,7 +17,7 @@ export function decreaseAmountAction(item: OrderProps) {
   };
 }
 
-export function increaseAmountAction(item: OrderProps) {
+export function increaseAmountAction(item: unknown) {
   return {
     type: ActionTypes.CHECKOUT_INCREASE_ITEM_QUANTITY,
     payload: {

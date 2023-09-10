@@ -130,7 +130,7 @@ export function FormCard() {
               type="text"
               id="city"
               name="city"
-              value={dataCep.cidade}
+              value={dataCep.localidade}
               placeholder="Cidade"
               disabled
             />
