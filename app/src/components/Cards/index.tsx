@@ -7,9 +7,10 @@ import {
   CardTag,
   CardTitle,
 } from "./styles";
-import { CardProps } from "./constants";
+
 import { useContext } from "react";
 import { CartContext } from "../../App";
+import { CardProps } from "../../interfaces";
 
 export function Cards() {
   const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =

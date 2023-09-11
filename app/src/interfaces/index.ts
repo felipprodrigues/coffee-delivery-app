@@ -25,7 +25,6 @@ export interface CartProps {
   totalPrice: string;
   finalOrder: OrderProps[];
   newOrder: OrderProps[];
-  disabledButton: boolean;
   checkedInput: string;
 }
 

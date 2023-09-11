@@ -2,7 +2,7 @@
 import { toast } from "react-toastify";
 
 import { ActionTypes } from "./actions";
-import { CardProps } from "../../components/Cards/constants";
+import { CardProps } from "../../interfaces";
 
 export function CartReducer(state: CardProps[], action: any): CardProps[] {
   switch (action.type) {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -16,10 +16,6 @@ import { CartContext } from "../../../App";
 import { PaymentProps } from "../../../interfaces";
 
 export function FormCard() {
-  // useEffect(() => {
-  //   console.log(checkedInput);
-  // }, [checkedInput]);
-
   const {
     addressNumber,
     setAddressNumber,

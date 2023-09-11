@@ -37,7 +37,6 @@ export function CheckoutCard() {
     loading,
     newOrder,
     dispatch,
-
     addressNumber,
     checkedInput,
   } = useContext(CartContext);
@@ -52,8 +51,9 @@ export function CheckoutCard() {
   const isButton = true;
   const isSmall = false;
 
-  const [isFormFilled, setIsFormFilled] = useState(false);
-  const [isPaymentMethodSelected, setIsPaymentMethodSelected] = useState(false);
+  const [isFormFilled, setIsFormFilled] = useState(false || "");
+  const [isPaymentMethodSelected, setIsPaymentMethodSelected] =
+    useState<boolean>(false);
 
   useEffect(() => {
     // Check if the form is filled (you can customize these conditions)

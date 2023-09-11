@@ -1,7 +1,8 @@
 import { BannerContainer, BannerFlag, BannerTags } from "./styles";
-import { TagProps, tags } from "./constants";
+import { tags } from "./constants";
 
 import CoffeeCup from "../../assets/CoffeCup.png";
+import { TagProps } from "../../interfaces";
 
 export function Banner() {
   return (
