@@ -16,55 +16,11 @@ import { CartReducer } from "./reducers/cart/reducer";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
-import { CardProps, cardData } from "./components/Cards/constants";
-import axios from "axios";
+import { cardData } from "./components/Cards/constants";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface CartProps {
-  // FUNCTIONS
-  handleCart: (item: any) => void;
-  removeItemFromCart: (item: any) => void;
-  fetchAddress: (item: any) => void;
-  setAddressNumber: React.Dispatch<React.SetStateAction<string>>;
-  setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
-  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
-  handleIncreaseAmount: (item: any) => void;
-  handleDecreaseAmount: (item: any) => void;
-  handleOrder: (item?: any) => void;
-  dispatch: React.Dispatch<React.SetStateAction<string[]>>;
-  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
-  // STATES
-  cartTotalAmount: number;
-  cartItems: CardProps[];
-  addressNumber: string;
-  addressDetails: string;
-  dataCep: AddressProps;
-  loading: boolean;
-  paymentMethod: string;
-  totalPrice: string;
-  finalOrder: OrderProps[];
-  newOrder: OrderProps[];
-}
-
-export interface AddressProps {
-  cep: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-  logradouro: string;
-  numero?: string;
-  complemento?: string;
-  metodoPagamento?: string;
-}
-
-export interface OrderProps {
-  address?: AddressProps[];
-  id: string;
-  title: string;
-  price: string;
-  amount: number;
-}
+import { CartProps, OrderProps, AddressProps, CardProps } from "./interfaces";
 
 export const CartContext = createContext({} as CartProps);
 
@@ -91,6 +47,7 @@ export function App() {
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
+  const [checkedInput, setCheckedInput] = useState("");
 
   useEffect(() => {
     if (!newOrder.length) {
@@ -149,7 +106,8 @@ export function App() {
       toast.error("Preencha o formulário");
       return;
     }
-    if (!addressNumber.length || !paymentMethod) {
+
+    if (!addressNumber || !paymentMethod) {
       toast.error("Preencha todos os campos necessários");
       return;
     }
@@ -157,7 +115,7 @@ export function App() {
     const newCepData = {
       ...dataCep,
       numero: addressNumber,
-      complemento: addressDetails,
+      complemento: addressDetails || null,
     };
 
     const orderData = {
@@ -234,6 +192,7 @@ export function App() {
           handleOrder,
           dispatch,
           setFinalOrder,
+          setCheckedInput,
           cartTotalAmount,
           cartItems,
           addressNumber,
@@ -244,6 +203,7 @@ export function App() {
           totalPrice,
           finalOrder,
           newOrder,
+          checkedInput,
         }}
       >
         <BrowserRouter>

@@ -9,16 +9,10 @@ import {
   SuccessImageHolder,
   SuccessSteps,
 } from "../components/Success/styles";
-import { ReactElement, useContext } from "react";
+import { useContext } from "react";
 import { CurrencyDollar, MapPin, Timer } from "phosphor-react";
 import { CartContext } from "../App";
-
-interface StatusProps {
-  icon: ReactElement;
-  msg: string;
-  bgColor: string;
-  status?: string;
-}
+import { StatusProps } from "../interfaces";
 
 export function Success() {
   const { finalOrder, loading }: any = useContext(CartContext);
