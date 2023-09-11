@@ -27,7 +27,7 @@ export function Header() {
             <MapPin size={24} />
             {!dataCep ? null : (
               <span>
-                {dataCep.cidade}
+                {dataCep.localidade}
                 {dataCep.uf && `, ${dataCep.uf}`}
               </span>
             )}

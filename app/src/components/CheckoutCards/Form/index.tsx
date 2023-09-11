@@ -81,10 +81,11 @@ export function FormCard() {
             type="text"
             id="cep"
             name="cep"
-            value={dataCep.cep}
+            // value={dataCep.cep}
             placeholder="CEP"
             required
             onChange={({ target }) => fetchAddress(target.value)}
+            // onChange={({ target }) => console.log(target.value)}
           />
 
           <input
@@ -129,7 +130,7 @@ export function FormCard() {
               type="text"
               id="city"
               name="city"
-              value={dataCep.cidade}
+              value={dataCep.localidade}
               placeholder="Cidade"
               disabled
             />
