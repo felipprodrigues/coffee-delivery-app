@@ -1,11 +1,6 @@
 import { Coffee, Package, ShoppingCart, Timer } from "phosphor-react";
-import { ReactNode } from "react";
 
-export interface TagProps {
-  icon: ReactNode;
-  label: string;
-  bgColor: string;
-}
+import { TagProps } from "../../../interfaces";
 
 export const tags: TagProps[] = [
   {

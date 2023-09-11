@@ -13,17 +13,7 @@ import moccacino from "../../../assets/moccacino.png";
 import macchiato from "../../../assets/macchiato.png";
 import cafeComLeite from "../../../assets/comLeite.png";
 import { v4 as uuidv4 } from "uuid";
-
-export interface CardProps {
-  id: string;
-  title: string;
-  label: string;
-  tag: string | string[];
-  image: string;
-  price: string;
-  amount: number;
-  isSmall?: boolean;
-}
+import { CardProps } from "../../../interfaces";
 
 export const cardData: CardProps[] = [
   {

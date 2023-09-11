@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //* Utils
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import {
   decreaseAmountAction,
@@ -23,8 +23,9 @@ import { Minus, Plus, Trash } from "phosphor-react";
 import { ThreeDots } from "react-loader-spinner";
 
 //* Component
-import { CartContext, OrderProps } from "../../../App";
+import { CartContext } from "../../../App";
 import { NavLink } from "react-router-dom";
+import { OrderProps } from "../../../interfaces";
 
 export function CheckoutCard() {
   const {
@@ -36,6 +37,9 @@ export function CheckoutCard() {
     loading,
     newOrder,
     dispatch,
+
+    addressNumber,
+    checkedInput,
   } = useContext(CartContext);
 
   function decreaseAmount(item: OrderProps): void {
@@ -47,6 +51,25 @@ export function CheckoutCard() {
   }
   const isButton = true;
   const isSmall = false;
+
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  const [isPaymentMethodSelected, setIsPaymentMethodSelected] = useState(false);
+
+  useEffect(() => {
+    // Check if the form is filled (you can customize these conditions)
+    const isFormValid =
+      dataCep.cep &&
+      addressNumber &&
+      dataCep.logradouro &&
+      dataCep.bairro &&
+      dataCep.localidade &&
+      dataCep.uf;
+
+    setIsFormFilled(isFormValid);
+
+    // Check if a payment method is selected
+    setIsPaymentMethodSelected(checkedInput !== "");
+  }, [dataCep, addressNumber, checkedInput]);
 
   return (
     <Card>
@@ -119,7 +142,11 @@ export function CheckoutCard() {
           </CheckoutAmount>
 
           <NavLink to="/success" id="confirmOrder">
-            <CheckoutButton onClick={() => handleOrder()} type="button">
+            <CheckoutButton
+              onClick={() => handleOrder()}
+              type="button"
+              disabled={!isFormFilled && !isPaymentMethodSelected}
+            >
               {loading ? (
                 <ThreeDots
                   height="20"

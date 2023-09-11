@@ -1,4 +1,4 @@
-import { OrderProps } from "../../App";
+import { OrderProps } from "../../interfaces";
 
 export enum ActionTypes {
   HANDLE_CART = "HANDLE_CART",
@@ -8,7 +8,7 @@ export enum ActionTypes {
   EMPTY_CART = "EMPTY_CART",
 }
 
-export function decreaseAmountAction(item: unknown) {
+export function decreaseAmountAction(item: OrderProps) {
   return {
     type: ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY,
     payload: {
@@ -17,7 +17,7 @@ export function decreaseAmountAction(item: unknown) {
   };
 }
 
-export function increaseAmountAction(item: unknown) {
+export function increaseAmountAction(item: OrderProps) {
   return {
     type: ActionTypes.CHECKOUT_INCREASE_ITEM_QUANTITY,
     payload: {

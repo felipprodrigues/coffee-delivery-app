@@ -13,19 +13,12 @@ import {
 import { Card } from "../styles";
 import { CardBlock, CardPaymentMethod, PaymentButton } from "./styles";
 import { CartContext } from "../../../App";
-
-interface PaymentProps {
-  id: string;
-  icon: JSX.Element;
-  label: string;
-}
+import { PaymentProps } from "../../../interfaces";
 
 export function FormCard() {
-  const [checkedInput, setChecketInput] = useState("");
-
-  useEffect(() => {
-    console.log(checkedInput);
-  }, [checkedInput]);
+  // useEffect(() => {
+  //   console.log(checkedInput);
+  // }, [checkedInput]);
 
   const {
     addressNumber,
@@ -35,6 +28,8 @@ export function FormCard() {
     dataCep,
     fetchAddress,
     setPaymentMethod,
+    checkedInput,
+    setCheckedInput,
   } = useContext(CartContext);
 
   const paymentMethodCards: PaymentProps[] = [
@@ -57,7 +52,7 @@ export function FormCard() {
 
   function handlePaymentMethod(item: any) {
     if (item) {
-      setChecketInput(item.target.value);
+      setCheckedInput(item.target.value);
     } else {
       return;
     }
@@ -81,11 +76,9 @@ export function FormCard() {
             type="text"
             id="cep"
             name="cep"
-            // value={dataCep.cep}
             placeholder="CEP"
             required
             onChange={({ target }) => fetchAddress(target.value)}
-            // onChange={({ target }) => console.log(target.value)}
           />
 
           <input
@@ -107,14 +100,16 @@ export function FormCard() {
               required
               onChange={({ target }) => setAddressNumber(target.value)}
             />
-            <input
-              type="text"
-              id="addressDetails"
-              name="addressDetails"
-              value={addressDetails}
-              placeholder="Complemento (opcional)"
-              onChange={({ target }) => setAddressDetails(target.value)}
-            />
+            {addressNumber && (
+              <input
+                type="text"
+                id="addressDetails"
+                name="addressDetails"
+                value={addressDetails}
+                placeholder="Complemento (opcional)"
+                onChange={({ target }) => setAddressDetails(target.value)}
+              />
+            )}
           </div>
 
           <div>
