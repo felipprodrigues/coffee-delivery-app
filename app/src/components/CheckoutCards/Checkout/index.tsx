@@ -26,6 +26,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { CartContext } from "../../../App";
 import { NavLink } from "react-router-dom";
 import { OrderProps } from "../../../interfaces";
+import { QuantityBox } from "../../QuantityBox";
 
 export function CheckoutCard() {
   const {
@@ -90,7 +91,8 @@ export function CheckoutCard() {
                       <span>{item.title}</span>
 
                       <div>
-                        <CardSelectAmount isSmall={isSmall} isButton={isButton}>
+                        <QuantityBox item={item} />
+                        {/* <CardSelectAmount isSmall={isSmall} isButton={isButton}>
                           <Minus
                             size={16}
                             onClick={() => decreaseAmount(item)}
@@ -100,7 +102,7 @@ export function CheckoutCard() {
                             size={16}
                             onClick={() => increaseAmount(item)}
                           />
-                        </CardSelectAmount>
+                        </CardSelectAmount> */}
 
                         <CardSelectAmount
                           isButton
