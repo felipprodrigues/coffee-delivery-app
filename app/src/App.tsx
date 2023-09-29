@@ -193,6 +193,7 @@ export function App() {
           dispatch,
           setFinalOrder,
           setCheckedInput,
+          setCartItems,
           cartTotalAmount,
           cartItems,
           addressNumber,
