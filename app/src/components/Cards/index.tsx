@@ -11,6 +11,7 @@ import {
 import { useContext } from "react";
 import { CartContext } from "../../App";
 import { CardProps } from "../../interfaces";
+import { QuantityBox } from "../QuantityBox";
 
 export function Cards() {
   const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =
@@ -50,11 +51,7 @@ export function Cards() {
             R$ <h2>{card.price}</h2>
           </span>
 
-          <CardSelectAmount isButton={isButton} isSmall={isSmall}>
-            <Minus size={16} onClick={() => handleDecreaseAmount(card)} />
-            <span>{card.amount}</span>
-            <Plus size={16} onClick={() => handleIncreaseAmount(card)} />
-          </CardSelectAmount>
+          <QuantityBox item={card} />
 
           <div onClick={() => handleCart(card)}>
             <ShoppingCart size={24} />
