@@ -1,12 +1,5 @@
-import { Minus, Plus, ShoppingCart } from "phosphor-react";
-import {
-  Card,
-  CardFooter,
-  CardImage,
-  CardSelectAmount,
-  CardTag,
-  CardTitle,
-} from "./styles";
+import { ShoppingCart } from "phosphor-react";
+import { Card, CardFooter, CardImage, CardTag, CardTitle } from "./styles";
 
 import { useContext } from "react";
 import { CartContext } from "../../App";
@@ -14,15 +7,11 @@ import { CardProps } from "../../interfaces";
 import { QuantityBox } from "../QuantityBox";
 
 export function Cards() {
-  const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =
-    useContext(CartContext);
+  const { handleCart, catalogItems } = useContext(CartContext);
 
-  const isButton = true;
-  const isSmall = true;
-
-  const allCards = cartItems.map((card: CardProps) => {
+  const allCards = catalogItems.map((card: CardProps) => {
     return (
-      <Card>
+      <Card key={card.id}>
         <CardImage>
           <img src={card.image} />
         </CardImage>

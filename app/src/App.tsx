@@ -12,6 +12,10 @@ import {
 } from "./reducers/cart/actions";
 import { CartReducer } from "./reducers/cart/reducer";
 
+//* Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
 //* Themes
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./styles/default";
@@ -27,6 +31,8 @@ export const CartContext = createContext({} as CartProps);
 export function App() {
   const [loading, setLoading] = useState(false);
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
+  const [catalogItems, setCatalogItems] = useState<CardProps[]>(cardData);
+
   const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
 
   // Reducer
@@ -67,7 +73,7 @@ export function App() {
 
     setCartTotalAmount(cartTotalAmount);
     setTotalPrice(calculateTotal.toFixed(2));
-  }, [newOrder, dataCep, paymentMethod, cartItems, finalOrder, totalPrice]);
+  }, [newOrder, dataCep, paymentMethod, catalogItems, finalOrder, totalPrice]);
 
   async function fetchAddress(cep: string): Promise<void> {
     try {
@@ -86,7 +92,7 @@ export function App() {
   }
 
   function handleCart(item: any): void {
-    const draft: any = cartItems.find((order) => order.id === item.id);
+    const draft: any = catalogItems.find((order) => order.id === item.id);
 
     if (!draft) {
       toast.warning("Item não encontrado no carrinho");
@@ -148,71 +154,76 @@ export function App() {
     dispatch(removeItemFromCartAction(item));
   }
 
-  function handleIncreaseAmount(item: CardProps) {
-    setCartItems((prevCartItems) => {
-      const updatedCartItems = prevCartItems.map((card) => {
-        if (card.id === item.id) {
-          return { ...card, amount: card.amount + 1 };
-        }
-        return card;
-      });
+  // function handleIncreaseAmount(item: CardProps) {
+  //   setCatalogItems((prevCartItems) => {
+  //     const updatedCartItems = prevCartItems.map((card) => {
+  //       if (card.id === item.id) {
+  //         return { ...card, amount: card.amount + 1 };
+  //       }
+  //       return card;
+  //     });
 
-      return updatedCartItems;
-    });
-  }
+  //     return updatedCartItems;
+  //   });
+  // }
 
-  function handleDecreaseAmount(item: CardProps) {
-    setCartItems((prevCartItems: any) => {
-      const updatedCartItems = prevCartItems.map((card: any) => {
-        if (card.id === item.id && card.amount > 0) {
-          const draft = { ...card, amount: card.amount - 1 };
+  // function handleDecreaseAmount(item: CardProps) {
+  //   setCatalogItems((prevCartItems: any) => {
+  //     const updatedCartItems = prevCartItems.map((card: any) => {
+  //       if (card.id === item.id && card.amount > 0) {
+  //         const draft = { ...card, amount: card.amount - 1 };
 
-          return draft;
-        }
-        return card;
-      });
+  //         return draft;
+  //       }
+  //       return card;
+  //     });
 
-      return updatedCartItems;
-    });
-  }
+  //     return updatedCartItems;
+  //   });
+  // }
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <ToastContainer position="top-left" />
-      <CartContext.Provider
-        value={{
-          handleCart,
-          removeItemFromCart,
-          fetchAddress,
-          setAddressNumber,
-          setAddressDetails,
-          setPaymentMethod,
-          handleIncreaseAmount,
-          handleDecreaseAmount,
-          handleOrder,
-          dispatch,
-          setFinalOrder,
-          setCheckedInput,
-          setCartItems,
-          cartTotalAmount,
-          cartItems,
-          addressNumber,
-          addressDetails,
-          dataCep,
-          loading,
-          paymentMethod,
-          totalPrice,
-          finalOrder,
-          newOrder,
-          checkedInput,
-        }}
-      >
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
 
-        <GlobalStyle />
-      </CartContext.Provider>
+      {/* REDUX */}
+      <Provider store={store}>
+        {/* CONTEXT PROVIDER */}
+        <CartContext.Provider
+          value={{
+            handleCart,
+            removeItemFromCart,
+            fetchAddress,
+            setAddressNumber,
+            setAddressDetails,
+            setPaymentMethod,
+            // handleIncreaseAmount,
+            // handleDecreaseAmount,
+            handleOrder,
+            dispatch,
+            setFinalOrder,
+            setCheckedInput,
+            setCatalogItems,
+            cartTotalAmount,
+            catalogItems,
+            addressNumber,
+            addressDetails,
+            dataCep,
+            loading,
+            paymentMethod,
+            totalPrice,
+            finalOrder,
+            newOrder,
+            checkedInput,
+          }}
+        >
+          <BrowserRouter>
+            <Router />
+          </BrowserRouter>
+
+          <GlobalStyle />
+        </CartContext.Provider>
+      </Provider>
     </ThemeProvider>
   );
 }
