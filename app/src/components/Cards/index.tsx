@@ -6,8 +6,17 @@ import { CartContext } from "../../App";
 import { CardProps } from "../../interfaces";
 import { QuantityBox } from "../QuantityBox";
 
+import { useDispatch } from "react-redux";
+import { addProductToCart } from "../../redux/cart/actions";
+
 export function Cards() {
   const { handleCart, catalogItems } = useContext(CartContext);
+
+  const dispatch = useDispatch();
+
+  const handleAddProductToCart = (product: any) => {
+    dispatch(addProductToCart(product));
+  };
 
   const allCards = catalogItems.map((card: CardProps) => {
     return (
@@ -16,7 +25,7 @@ export function Cards() {
           <img src={card.image} />
         </CardImage>
 
-        <CardTag>
+        <CardTag key={card.id}>
           {Array.isArray(card.tag) && card.tag.length > 1 ? (
             card.tag.map((item, index) => (
               <div id="label">
@@ -42,7 +51,7 @@ export function Cards() {
 
           <QuantityBox item={card} />
 
-          <div onClick={() => handleCart(card)}>
+          <div onClick={() => handleAddProductToCart(card)}>
             <ShoppingCart size={24} />
           </div>
         </CardFooter>

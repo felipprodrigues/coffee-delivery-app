@@ -25,32 +25,43 @@ import { ThreeDots } from "react-loader-spinner";
 //* Component
 import { CartContext } from "../../../App";
 import { NavLink } from "react-router-dom";
-import { OrderProps } from "../../../interfaces";
+import { CardProps, OrderProps } from "../../../interfaces";
 import { QuantityBox } from "../../QuantityBox";
+
+import { useDispatch, useSelector } from "react-redux";
+import { removeProductFromCart } from "../../../redux/cart/actions";
 
 export function CheckoutCard() {
   const {
-    removeItemFromCart,
+    // removeItemFromCart,
     handleOrder,
     cartTotalAmount,
     totalPrice,
     dataCep,
     loading,
-    newOrder,
-    dispatch,
+    // newOrder,
+    // dispatch,
     addressNumber,
     checkedInput,
   } = useContext(CartContext);
 
-  function decreaseAmount(item: OrderProps): void {
-    dispatch(decreaseAmountAction(item));
-  }
+  const { products } = useSelector(
+    (rootReducer: unknown) => rootReducer.CartReducer
+  );
 
-  function increaseAmount(item: OrderProps): void {
-    dispatch(increaseAmountAction(item));
-  }
-  const isButton = true;
-  const isSmall = false;
+  const dispatch = useDispatch();
+
+  const handleRemoveItemFromCart = (id: CardProps) => {
+    dispatch(removeProductFromCart(id));
+  };
+
+  // function decreaseAmount(item: OrderProps): void {
+  //   dispatch(decreaseAmountAction(item));
+  // }
+
+  // function increaseAmount(item: OrderProps): void {
+  //   dispatch(increaseAmountAction(item));
+  // }
 
   const [isFormFilled, setIsFormFilled] = useState(false || "");
   const [isPaymentMethodSelected, setIsPaymentMethodSelected] =
@@ -76,12 +87,12 @@ export function CheckoutCard() {
     <Card>
       <h3>Cafés selecionados</h3>
 
-      {!newOrder.length ? (
+      {!products.length ? (
         <p>Nenhum item selecionado</p>
       ) : (
         <CardBlock>
           <CardCheckout>
-            {newOrder.map((item: any) => {
+            {products.map((item: any) => {
               return (
                 <>
                   <CardCheckoutItem key={item.title}>
@@ -92,22 +103,11 @@ export function CheckoutCard() {
 
                       <div>
                         <QuantityBox item={item} />
-                        {/* <CardSelectAmount isSmall={isSmall} isButton={isButton}>
-                          <Minus
-                            size={16}
-                            onClick={() => decreaseAmount(item)}
-                          />
-                          <span>{item.amount}</span>
-                          <Plus
-                            size={16}
-                            onClick={() => increaseAmount(item)}
-                          />
-                        </CardSelectAmount> */}
 
                         <CardSelectAmount
                           isButton
                           isSmall
-                          onClick={() => removeItemFromCart(item)}
+                          onClick={() => handleRemoveItemFromCart(item)}
                         >
                           <Trash />
                           <span>REMOVER</span>
