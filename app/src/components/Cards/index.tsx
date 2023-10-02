@@ -1,33 +1,31 @@
-import { Minus, Plus, ShoppingCart } from "phosphor-react";
-import {
-  Card,
-  CardFooter,
-  CardImage,
-  CardSelectAmount,
-  CardTag,
-  CardTitle,
-} from "./styles";
+import { ShoppingCart } from "phosphor-react";
+import { Card, CardFooter, CardImage, CardTag, CardTitle } from "./styles";
 
 import { useContext } from "react";
 import { CartContext } from "../../App";
 import { CardProps } from "../../interfaces";
 import { QuantityBox } from "../QuantityBox";
 
+import { useDispatch } from "react-redux";
+import { addProductToCart } from "../../redux/cart/actions";
+
 export function Cards() {
-  const { handleCart, handleIncreaseAmount, handleDecreaseAmount, cartItems } =
-    useContext(CartContext);
+  const { handleCart, catalogItems } = useContext(CartContext);
 
-  const isButton = true;
-  const isSmall = true;
+  const dispatch = useDispatch();
 
-  const allCards = cartItems.map((card: CardProps) => {
+  const handleAddProductToCart = (product: any) => {
+    dispatch(addProductToCart(product));
+  };
+
+  const allCards = catalogItems.map((card: CardProps) => {
     return (
-      <Card>
+      <Card key={card.id}>
         <CardImage>
           <img src={card.image} />
         </CardImage>
 
-        <CardTag>
+        <CardTag key={card.id}>
           {Array.isArray(card.tag) && card.tag.length > 1 ? (
             card.tag.map((item, index) => (
               <div id="label">
@@ -53,7 +51,7 @@ export function Cards() {
 
           <QuantityBox item={card} />
 
-          <div onClick={() => handleCart(card)}>
+          <div onClick={() => handleAddProductToCart(card)}>
             <ShoppingCart size={24} />
           </div>
         </CardFooter>

@@ -9,6 +9,8 @@ export function CartReducer(state: CardProps[], action: any): CardProps[] {
     case ActionTypes.HANDLE_CART: {
       const draft = action.payload.draft;
 
+      console.log(draft, "aqui o draft");
+
       if (draft?.amount === 0) {
         toast.warning("Adicione ao menos um item ao carrinho");
       }
@@ -46,6 +48,7 @@ export function CartReducer(state: CardProps[], action: any): CardProps[] {
 
       return updatedState;
     }
+
     case ActionTypes.CHECKOUT_DECREASE_ITEM_QUANTITY: {
       const clickedItem = action.payload.clickedItem;
 

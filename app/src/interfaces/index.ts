@@ -14,10 +14,10 @@ export interface CartProps {
   dispatch: React.Dispatch<React.SetStateAction<string[]>>;
   setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
   setCheckedInput: React.Dispatch<React.SetStateAction<string>>;
-  setCartItems: React.Dispatch<React.SetStateAction<OrderProps[]>>;
+  setCatalogItems: React.Dispatch<React.SetStateAction<OrderProps[]>>;
   // STATES
   cartTotalAmount: number;
-  cartItems: CardProps[];
+  catalogItems: CardProps[];
   addressNumber: string;
   addressDetails: string;
   dataCep: AddressProps;
