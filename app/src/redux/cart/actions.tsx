@@ -12,12 +12,12 @@ export const removeProductFromCart = (payload: CardProps) => ({
   payload,
 });
 
-export const increaseProductQuantity = (payload, productId) => {
-  // Use the increaseItemAmount utility function to update the product quantity
-  const updatedProducts = increaseItemAmount(payload, productId);
+export const increaseProductQuantity = (payload: CardProps) => ({
+  type: CartActionTypes.INCREASE_PRODUCT_QUANTITY,
+  payload,
+});
 
-  return {
-    type: CartActionTypes.INCREASE_PRODUCT_QUANTITY,
-    payload: updatedProducts, // Pass the updated products to the action
-  };
-};
+export const decreaseProductQuantity = (payload: CardProps) => ({
+  type: CartActionTypes.DECREASE_PRODUCT_QUANTITY,
+  payload,
+});

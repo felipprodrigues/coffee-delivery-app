@@ -9,11 +9,15 @@ import { MapPin, ShoppingCart } from "phosphor-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../../App";
+import { useSelector } from "react-redux";
+import { selectProductsCount } from "../../redux/cart/cart.selectors";
 
 export function Header() {
-  const { cartTotalAmount, dataCep } = useContext(CartContext);
+  const { dataCep } = useContext(CartContext);
 
   const location = useLocation();
+
+  const productsCount = useSelector(selectProductsCount);
 
   return (
     <HeaderContainer>
@@ -37,7 +41,7 @@ export function Header() {
             <HeaderLabel>
               <ShoppingCart size={24} />
               <HeaderShoppingCartCounter>
-                {cartTotalAmount}
+                {productsCount}
               </HeaderShoppingCartCounter>
             </HeaderLabel>
           </NavLink>

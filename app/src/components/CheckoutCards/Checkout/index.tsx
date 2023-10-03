@@ -2,10 +2,10 @@
 //* Utils
 import { useContext, useEffect, useState } from "react";
 
-import {
-  decreaseAmountAction,
-  increaseAmountAction,
-} from "../../../reducers/cart/actions";
+// import {
+//   decreaseAmountAction,
+//   increaseAmountAction,
+// } from "../../../reducers/cart/actions";
 
 //* Styles
 import { CardBlock } from "../Form/styles";
@@ -18,36 +18,33 @@ import {
   CheckoutButton,
 } from "./styles";
 import { CardSelectAmount } from "../../Cards/styles";
-import { Minus, Plus, Trash } from "phosphor-react";
+import { Trash } from "phosphor-react";
 
 import { ThreeDots } from "react-loader-spinner";
 
 //* Component
 import { CartContext } from "../../../App";
 import { NavLink } from "react-router-dom";
-import { CardProps, OrderProps } from "../../../interfaces";
+import { CardProps } from "../../../interfaces";
 import { QuantityBox } from "../../QuantityBox";
 
 import { useDispatch, useSelector } from "react-redux";
 import { removeProductFromCart } from "../../../redux/cart/actions";
+import {
+  selectProductTotalPrice,
+  selectProductsCount,
+} from "../../../redux/cart/cart.selectors";
 
 export function CheckoutCard() {
-  const {
-    // removeItemFromCart,
-    handleOrder,
-    cartTotalAmount,
-    totalPrice,
-    dataCep,
-    loading,
-    // newOrder,
-    // dispatch,
-    addressNumber,
-    checkedInput,
-  } = useContext(CartContext);
+  const { handleOrder, dataCep, loading, addressNumber, checkedInput } =
+    useContext(CartContext);
 
   const { products } = useSelector(
     (rootReducer: unknown) => rootReducer.CartReducer
   );
+
+  const productsCount = useSelector(selectProductsCount);
+  const productsTotalPrice = useSelector(selectProductTotalPrice);
 
   const dispatch = useDispatch();
 
@@ -55,20 +52,11 @@ export function CheckoutCard() {
     dispatch(removeProductFromCart(id));
   };
 
-  // function decreaseAmount(item: OrderProps): void {
-  //   dispatch(decreaseAmountAction(item));
-  // }
-
-  // function increaseAmount(item: OrderProps): void {
-  //   dispatch(increaseAmountAction(item));
-  // }
-
   const [isFormFilled, setIsFormFilled] = useState(false || "");
   const [isPaymentMethodSelected, setIsPaymentMethodSelected] =
     useState<boolean>(false);
 
   useEffect(() => {
-    // Check if the form is filled (you can customize these conditions)
     const isFormValid =
       dataCep.cep &&
       addressNumber &&
@@ -79,7 +67,6 @@ export function CheckoutCard() {
 
     setIsFormFilled(isFormValid);
 
-    // Check if a payment method is selected
     setIsPaymentMethodSelected(checkedInput !== "");
   }, [dataCep, addressNumber, checkedInput]);
 
@@ -92,22 +79,20 @@ export function CheckoutCard() {
       ) : (
         <CardBlock>
           <CardCheckout>
-            {products.map((item: any) => {
+            {products.map((product: any) => {
               return (
                 <>
-                  <CardCheckoutItem key={item.title}>
-                    <img src={item.image} />
+                  <CardCheckoutItem key={product.title}>
+                    <img src={product.image} />
 
                     <CardQuantityHolder>
-                      <span>{item.title}</span>
+                      <span>{product.title}</span>
 
                       <div>
-                        <QuantityBox item={item} />
+                        <QuantityBox selectedProduct={product} isCartItem />
 
                         <CardSelectAmount
-                          isButton
-                          isSmall
-                          onClick={() => handleRemoveItemFromCart(item)}
+                          onClick={() => handleRemoveItemFromCart(product)}
                         >
                           <Trash />
                           <span>REMOVER</span>
@@ -116,7 +101,7 @@ export function CheckoutCard() {
                     </CardQuantityHolder>
 
                     <div>
-                      <span>R$ {item.price}</span>
+                      <span>R$ {product.price}</span>
                     </div>
                   </CardCheckoutItem>
                 </>
@@ -127,7 +112,7 @@ export function CheckoutCard() {
           <CheckoutAmount>
             <div>
               <span>Total de itens</span>
-              <span>{cartTotalAmount}</span>
+              <span>{productsCount}</span>
             </div>
             <div>
               <span>Entrega</span>
@@ -139,7 +124,7 @@ export function CheckoutCard() {
             </div>
             <div>
               <span>Total</span>
-              <span>R$ {totalPrice}</span>
+              <span>R$ {productsTotalPrice}</span>
             </div>
           </CheckoutAmount>
 

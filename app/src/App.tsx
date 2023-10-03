@@ -6,10 +6,7 @@ import { Router } from "./Router";
 
 //* Context
 import { createContext, useEffect, useReducer, useState } from "react";
-import {
-  handleCartAction,
-  removeItemFromCartAction,
-} from "./reducers/cart/actions";
+
 import { CartReducer } from "./reducers/cart/reducer";
 
 //* Redux
@@ -20,20 +17,17 @@ import store from "./redux/store";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./styles/default";
 import { GlobalStyle } from "./styles/global";
-import { cardData } from "./components/Cards/constants";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { CartProps, OrderProps, AddressProps, CardProps } from "./interfaces";
+import { CartProps, OrderProps, AddressProps } from "./interfaces";
 
 export const CartContext = createContext({} as CartProps);
 
 export function App() {
   const [loading, setLoading] = useState(false);
   const [cartTotalAmount, setCartTotalAmount] = useState(0);
-  const [catalogItems, setCatalogItems] = useState<CardProps[]>(cardData);
-
-  const [cartItems, setCartItems] = useState<CardProps[]>(cardData);
 
   // Reducer
   const [newOrder, dispatch] = useReducer(CartReducer, []);
@@ -61,19 +55,7 @@ export function App() {
       setTotalPrice("0");
       return;
     }
-
-    const cartTotalAmount = newOrder.reduce((acc: number, curr: OrderProps) => {
-      return acc + curr.amount;
-    }, 0);
-
-    const calculateTotal = newOrder.reduce((sum: number, item: OrderProps) => {
-      const price = item.price.replace(",", ".");
-      return sum + parseFloat(price) * item.amount;
-    }, 0);
-
-    setCartTotalAmount(cartTotalAmount);
-    setTotalPrice(calculateTotal.toFixed(2));
-  }, [newOrder, dataCep, paymentMethod, catalogItems, finalOrder, totalPrice]);
+  }, [newOrder, dataCep, paymentMethod, finalOrder, totalPrice]);
 
   async function fetchAddress(cep: string): Promise<void> {
     try {
@@ -89,22 +71,6 @@ export function App() {
     } catch (error) {
       console.error("Attempt to fetch CEP details:", error);
     }
-  }
-
-  function handleCart(item: any): void {
-    const draft: any = catalogItems.find((order) => order.id === item.id);
-
-    if (!draft) {
-      toast.warning("Item não encontrado no carrinho");
-      return;
-    }
-
-    if (draft?.amount === 0) {
-      toast.warning("Adicione ao menos um item ao carrinho");
-      return;
-    }
-
-    dispatch(handleCartAction(draft));
   }
 
   function handleOrder(): void {
@@ -150,38 +116,6 @@ export function App() {
     setTotalPrice("");
   }
 
-  function removeItemFromCart(item: any) {
-    dispatch(removeItemFromCartAction(item));
-  }
-
-  // function handleIncreaseAmount(item: CardProps) {
-  //   setCatalogItems((prevCartItems) => {
-  //     const updatedCartItems = prevCartItems.map((card) => {
-  //       if (card.id === item.id) {
-  //         return { ...card, amount: card.amount + 1 };
-  //       }
-  //       return card;
-  //     });
-
-  //     return updatedCartItems;
-  //   });
-  // }
-
-  // function handleDecreaseAmount(item: CardProps) {
-  //   setCatalogItems((prevCartItems: any) => {
-  //     const updatedCartItems = prevCartItems.map((card: any) => {
-  //       if (card.id === item.id && card.amount > 0) {
-  //         const draft = { ...card, amount: card.amount - 1 };
-
-  //         return draft;
-  //       }
-  //       return card;
-  //     });
-
-  //     return updatedCartItems;
-  //   });
-  // }
-
   return (
     <ThemeProvider theme={defaultTheme}>
       <ToastContainer position="top-left" />
@@ -191,21 +125,16 @@ export function App() {
         {/* CONTEXT PROVIDER */}
         <CartContext.Provider
           value={{
-            handleCart,
-            removeItemFromCart,
             fetchAddress,
             setAddressNumber,
             setAddressDetails,
             setPaymentMethod,
-            // handleIncreaseAmount,
-            // handleDecreaseAmount,
             handleOrder,
             dispatch,
             setFinalOrder,
             setCheckedInput,
-            setCatalogItems,
+
             cartTotalAmount,
-            catalogItems,
             addressNumber,
             addressDetails,
             dataCep,
