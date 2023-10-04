@@ -32,9 +32,9 @@ export function FormCard() {
     dispatch(updatePaymentMethod(paymentMethod));
   }, [dispatch, dataCep, addressNumber, addressDetails, paymentMethod]);
 
-  function handlePaymentMethod(value: any) {
-    if (value) {
-      setPaymentMethod(value);
+  function handlePaymentMethod(item: any) {
+    if (item) {
+      setPaymentMethod(item.target.value);
     }
     return;
   }
@@ -59,7 +59,7 @@ export function FormCard() {
             name="cep"
             placeholder="CEP"
             required
-            onChange={({ target }) => dispatch(fetchAddress(target.value))}
+            onChange={(e) => dispatch(fetchAddress(e.target.value))}
           />
 
           <input
@@ -143,7 +143,7 @@ export function FormCard() {
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={({ target }) => handlePaymentMethod(target.value)}
+                  onChange={(e) => handlePaymentMethod(e)}
                   value={item.label}
                 />
                 <span>{item.label}</span>

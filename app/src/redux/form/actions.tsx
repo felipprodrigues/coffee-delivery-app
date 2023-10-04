@@ -30,7 +30,7 @@ export const updatePaymentMethod = (method: string) => ({
   method,
 });
 
-export const fetchAddress = (cep: string) => {
+export const fetchAddress = (cep: any) => {
   return async (
     dispatch: (arg0: {
       type: FormActionTypes;
