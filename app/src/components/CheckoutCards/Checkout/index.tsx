@@ -2,11 +2,6 @@
 //* Utils
 import { useContext, useEffect, useState } from "react";
 
-// import {
-//   decreaseAmountAction,
-//   increaseAmountAction,
-// } from "../../../reducers/cart/actions";
-
 //* Styles
 import { CardBlock } from "../Form/styles";
 import { Card } from "../styles";
@@ -20,14 +15,14 @@ import {
 import { CardSelectAmount } from "../../Cards/styles";
 import { Trash } from "phosphor-react";
 
-import { ThreeDots } from "react-loader-spinner";
-
 //* Component
 import { CartContext } from "../../../App";
 import { NavLink } from "react-router-dom";
 import { CardProps } from "../../../interfaces";
 import { QuantityBox } from "../../QuantityBox";
+import { ThreeDots } from "react-loader-spinner";
 
+// REDUX
 import { useDispatch, useSelector } from "react-redux";
 import { removeProductFromCart } from "../../../redux/cart/actions";
 import {
@@ -141,7 +136,6 @@ export function CheckoutCard() {
                   radius="9"
                   color="#fff"
                   ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
                   visible={true}
                 />
               ) : (

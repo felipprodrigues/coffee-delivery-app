@@ -6,12 +6,12 @@ import { QuantityBox } from "../QuantityBox";
 
 import { useDispatch } from "react-redux";
 import { addProductToCart } from "../../redux/cart/actions";
-import { cardData } from "./constants";
+import { coffeeList } from "../../constants";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 export function Cards() {
-  const [listOfItems, setListOfItems] = useState(cardData);
+  const [listOfItems, setListOfItems] = useState(coffeeList);
 
   const dispatch = useDispatch();
 

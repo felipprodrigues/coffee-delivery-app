@@ -23,8 +23,6 @@ export function QuantityBox({
     } else {
       const updatedProduct = { ...selectedProduct };
 
-      // if (updatedProduct.amount === 0) return;
-
       updatedProduct.amount += 1;
 
       setListOfItems((prevCardData: any) =>

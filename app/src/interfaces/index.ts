@@ -13,15 +13,15 @@ export interface CartProps {
   setCheckedInput: React.Dispatch<React.SetStateAction<string>>;
 
   // STATES
-  cartTotalAmount: number;
+  
   addressNumber: string;
   addressDetails: string;
   dataCep: AddressProps;
   loading: boolean;
   paymentMethod: string;
-  totalPrice: string;
+
   finalOrder: OrderProps[];
-  newOrder: OrderProps[];
+
   checkedInput: string;
 }
 

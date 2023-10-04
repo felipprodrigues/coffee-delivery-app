@@ -17,12 +17,15 @@ const CartReducer = (state = initialState, action: any) => {
       );
 
       if (!productIsAlreadyInCart) {
-        return {
-          ...state,
-          products: [...state.products, action.payload],
-        };
+        return (
+          toast.success("Item adicionado ao carrinho"),
+          {
+            ...state,
+            products: [...state.products, action.payload],
+          }
+        );
       } else {
-        alert("item já adicionado ao carrinho!");
+        toast.warning("Item já adicionado ao carrinho!");
         return state;
       }
 

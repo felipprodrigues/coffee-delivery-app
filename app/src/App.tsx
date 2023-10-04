@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //* Routing
 import { BrowserRouter } from "react-router-dom";
@@ -5,9 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Router } from "./Router";
 
 //* Context
-import { createContext, useEffect, useReducer, useState } from "react";
-
-import { CartReducer } from "./reducers/cart/reducer";
+import { createContext, useEffect, useState } from "react";
 
 //* Redux
 import { Provider } from "react-redux";
@@ -27,15 +26,7 @@ export const CartContext = createContext({} as CartProps);
 
 export function App() {
   const [loading, setLoading] = useState(false);
-  const [cartTotalAmount, setCartTotalAmount] = useState(0);
-
-  // Reducer
-  const [newOrder, dispatch] = useReducer(CartReducer, []);
-
-  // Final order
-  const [finalOrder, setFinalOrder] = useState<OrderProps[]>([]);
-
-  // FORM STATES
+  // CEP STATES
   const [dataCep, setDataCep] = useState<AddressProps>({
     cep: "",
     bairro: "",
@@ -43,35 +34,15 @@ export function App() {
     uf: "",
     logradouro: "",
   });
+  // FORM STATES
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalPrice, setTotalPrice] = useState("");
   const [checkedInput, setCheckedInput] = useState("");
+  // Final order
+  const [finalOrder, setFinalOrder] = useState<OrderProps[]>([]);
 
-  useEffect(() => {
-    if (!newOrder.length) {
-      setCartTotalAmount(0);
-      setTotalPrice("0");
-      return;
-    }
-  }, [newOrder, dataCep, paymentMethod, finalOrder, totalPrice]);
-
-  async function fetchAddress(cep: string): Promise<void> {
-    try {
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const responseData = await response.json();
-
-      setDataCep(responseData);
-    } catch (error) {
-      console.error("Attempt to fetch CEP details:", error);
-    }
-  }
+  useEffect(() => {}, [dataCep, paymentMethod, finalOrder]);
 
   function handleOrder(): void {
     if (!dataCep?.cep) {
@@ -91,7 +62,6 @@ export function App() {
     };
 
     const orderData = {
-      ...newOrder,
       address: newCepData,
       metodoPagamento: paymentMethod,
     };
@@ -99,7 +69,7 @@ export function App() {
     setLoading(true);
 
     setTimeout(() => {
-      setFinalOrder(orderData);
+      // setFinalOrder(orderData);
       setLoading(false);
       toast.success("Pedido registrado com sucesso!");
     }, 1000);
@@ -113,36 +83,31 @@ export function App() {
     });
     setAddressNumber("");
     setPaymentMethod("");
-    setTotalPrice("");
   }
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <ToastContainer position="top-left" />
+      <ToastContainer position="top-left" autoClose={2000} />
 
       {/* REDUX */}
       <Provider store={store}>
         {/* CONTEXT PROVIDER */}
         <CartContext.Provider
           value={{
-            fetchAddress,
             setAddressNumber,
             setAddressDetails,
             setPaymentMethod,
             handleOrder,
-            dispatch,
             setFinalOrder,
             setCheckedInput,
+            setDataCep,
 
-            cartTotalAmount,
             addressNumber,
             addressDetails,
             dataCep,
             loading,
             paymentMethod,
-            totalPrice,
             finalOrder,
-            newOrder,
             checkedInput,
           }}
         >
