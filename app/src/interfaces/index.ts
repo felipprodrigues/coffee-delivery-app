@@ -1,30 +1,5 @@
 import { ReactElement, ReactNode } from "react";
 
-export interface CartProps {
-  // FUNCTIONS
-
-  fetchAddress: (item: any) => void;
-  setAddressNumber: React.Dispatch<React.SetStateAction<string>>;
-  setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
-  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
-  handleOrder: (item?: any) => void;
-  dispatch: React.Dispatch<React.SetStateAction<string[]>>;
-  setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
-  setCheckedInput: React.Dispatch<React.SetStateAction<string>>;
-
-  // STATES
-  
-  addressNumber: string;
-  addressDetails: string;
-  dataCep: AddressProps;
-  loading: boolean;
-  paymentMethod: string;
-
-  finalOrder: OrderProps[];
-
-  checkedInput: string;
-}
-
 export interface AddressProps {
   cep: string;
   bairro: string;

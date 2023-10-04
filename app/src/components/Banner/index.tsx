@@ -20,7 +20,7 @@ export function Banner() {
           <div>
             {tags.map((tag: TagProps) => {
               return (
-                <div>
+                <div key={tag.label}>
                   <BannerFlag bgColor={tag.bgColor}>{tag.icon}</BannerFlag>
                   <span>{tag.label}</span>
                 </div>

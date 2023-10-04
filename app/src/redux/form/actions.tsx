@@ -31,7 +31,14 @@ export const updatePaymentMethod = (method: string) => ({
 });
 
 export const fetchAddress = (cep: string) => {
-  return async (dispatch) => {
+  return async (
+    dispatch: (arg0: {
+      type: FormActionTypes;
+      cep?: string;
+      response?: any;
+      error?: string;
+    }) => void
+  ) => {
     if (cep.length === 8) {
       dispatch(fetchAddressRequest(cep));
 
@@ -39,17 +46,17 @@ export const fetchAddress = (cep: string) => {
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
 
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Resposta falhou!");
         }
 
         const responseData = await response.json();
         dispatch(fetchAddressSuccess(responseData));
       } catch (error: any) {
-        console.error("Error fetching address:", error);
+        console.error("Erro ao buscar cep:", error);
         dispatch(fetchAddressFailure(error));
       }
     } else {
-      dispatch(fetchAddressFailure(new Error("Invalid CEP format")));
+      dispatch(fetchAddressFailure(new Error("Formato de CEP inválido")));
     }
   };
 };

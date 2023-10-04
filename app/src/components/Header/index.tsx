@@ -7,13 +7,11 @@ import {
 import Logo from "../../assets/Logo.png";
 import { MapPin, ShoppingCart } from "phosphor-react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { CartContext } from "../../App";
 import { useSelector } from "react-redux";
 import { selectProductsCount } from "../../redux/cart/cart.selectors";
 
 export function Header() {
-  const { dataCep } = useContext(CartContext);
+  const { dataCep } = useSelector((state: any) => state.FormReducer);
 
   const location = useLocation();
 

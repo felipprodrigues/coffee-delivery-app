@@ -32,9 +32,9 @@ export function FormCard() {
     dispatch(updatePaymentMethod(paymentMethod));
   }, [dispatch, dataCep, addressNumber, addressDetails, paymentMethod]);
 
-  function handlePaymentMethod(item: any) {
-    if (item) {
-      setPaymentMethod(item.target.value);
+  function handlePaymentMethod(value: any) {
+    if (value) {
+      setPaymentMethod(value);
     }
     return;
   }
@@ -136,13 +136,14 @@ export function FormCard() {
             return (
               <PaymentButton
                 className={paymentMethod === item.label ? "isChecked" : ""}
+                key={item.id}
               >
                 {item.icon}
                 <input
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={(e) => handlePaymentMethod(e)}
+                  onChange={({ target }) => handlePaymentMethod(target.value)}
                   value={item.label}
                 />
                 <span>{item.label}</span>

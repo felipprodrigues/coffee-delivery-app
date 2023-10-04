@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-//* Utils
-import { useContext, useEffect, useState } from "react";
-
-//* Styles
+import { NavLink } from "react-router-dom";
+// REDUX
+import { useDispatch, useSelector } from "react-redux";
+import { removeProductFromCart } from "../../../redux/cart/actions";
+import {
+  selectProductTotalPrice,
+  selectProductsCount,
+} from "../../../redux/cart/cart.selectors";
+import { placeFinalOrder } from "../../../redux/order/actions";
+// Styles
 import { CardBlock } from "../Form/styles";
 import { Card } from "../styles";
 import {
@@ -13,33 +19,20 @@ import {
   CheckoutButton,
 } from "./styles";
 import { CardSelectAmount } from "../../Cards/styles";
+// ICONS
 import { Trash } from "phosphor-react";
 
-//* Component
-import { CartContext } from "../../../App";
-import { NavLink } from "react-router-dom";
-import { CardProps } from "../../../interfaces";
+//Component
 import { QuantityBox } from "../../QuantityBox";
-import { ThreeDots } from "react-loader-spinner";
-
-// REDUX
-import { useDispatch, useSelector } from "react-redux";
-import { removeProductFromCart } from "../../../redux/cart/actions";
-import {
-  selectProductTotalPrice,
-  selectProductsCount,
-} from "../../../redux/cart/cart.selectors";
+import { CardProps } from "../../../interfaces";
 
 export function CheckoutCard() {
-  const { handleOrder, dataCep, loading, addressNumber, checkedInput } =
-    useContext(CartContext);
-
-  const { products } = useSelector(
-    (rootReducer: unknown) => rootReducer.CartReducer
-  );
-
   const productsCount = useSelector(selectProductsCount);
   const productsTotalPrice = useSelector(selectProductTotalPrice);
+  const { products } = useSelector((state: any) => state.CartReducer);
+  const { dataCep, addressNumber, paymentMethod, addressDetails } = useSelector(
+    (state: any) => state.FormReducer
+  );
 
   const dispatch = useDispatch();
 
@@ -47,23 +40,16 @@ export function CheckoutCard() {
     dispatch(removeProductFromCart(id));
   };
 
-  const [isFormFilled, setIsFormFilled] = useState(false || "");
-  const [isPaymentMethodSelected, setIsPaymentMethodSelected] =
-    useState<boolean>(false);
+  const placeOrder = () => {
+    const finalOrder = {
+      dataCep,
+      addressNumber,
+      paymentMethod,
+      addressDetails,
+    };
 
-  useEffect(() => {
-    const isFormValid =
-      dataCep.cep &&
-      addressNumber &&
-      dataCep.logradouro &&
-      dataCep.bairro &&
-      dataCep.localidade &&
-      dataCep.uf;
-
-    setIsFormFilled(isFormValid);
-
-    setIsPaymentMethodSelected(checkedInput !== "");
-  }, [dataCep, addressNumber, checkedInput]);
+    dispatch(placeFinalOrder(finalOrder));
+  };
 
   return (
     <Card>
@@ -111,10 +97,11 @@ export function CheckoutCard() {
             </div>
             <div>
               <span>Entrega</span>
-              {dataCep.uf === "SP" ? (
-                <span>R$ 5,00</span>
-              ) : (
+
+              {!dataCep || dataCep.uf !== "SP" ? (
                 <span>R$ 25,00</span>
+              ) : (
+                <span>R$ 5,00</span>
               )}
             </div>
             <div>
@@ -125,22 +112,11 @@ export function CheckoutCard() {
 
           <NavLink to="/success" id="confirmOrder">
             <CheckoutButton
-              onClick={() => handleOrder()}
+              onClick={() => placeOrder()}
               type="button"
-              disabled={!isFormFilled && !isPaymentMethodSelected}
+              disabled={!dataCep || !paymentMethod || !addressNumber}
             >
-              {loading ? (
-                <ThreeDots
-                  height="20"
-                  width="50"
-                  radius="9"
-                  color="#fff"
-                  ariaLabel="three-dots-loading"
-                  visible={true}
-                />
-              ) : (
-                <span>CONFIRMAR PEDIDO</span>
-              )}
+              <span>CONFIRMAR PEDIDO</span>
             </CheckoutButton>
           </NavLink>
         </CardBlock>
