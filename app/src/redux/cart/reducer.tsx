@@ -4,11 +4,9 @@
 import { toast } from "react-toastify";
 import { CardProps } from "../../interfaces";
 import { CartActionTypes } from "./action-types";
-import { increaseItemAmount } from "../../utils/increaseItemAmount";
 
 const initialState = {
   products: [],
-  productsTotalPrice: 0,
 };
 
 const CartReducer = (state = initialState, action: any) => {
@@ -18,18 +16,16 @@ const CartReducer = (state = initialState, action: any) => {
         (product: CardProps) => product.id === action.payload.id
       );
 
-      // if (!state.products.length) {
-      //   toast.warning("Adicione ao menos um item no carrinho");
-      //   return state;
-      // }
-
       if (!productIsAlreadyInCart) {
-        return {
-          ...state,
-          products: [...state.products, action.payload],
-        };
+        return (
+          toast.success("Item adicionado ao carrinho"),
+          {
+            ...state,
+            products: [...state.products, action.payload],
+          }
+        );
       } else {
-        alert("item já adicionado ao carrinho!");
+        toast.warning("Item já adicionado ao carrinho!");
         return state;
       }
 
@@ -42,25 +38,27 @@ const CartReducer = (state = initialState, action: any) => {
       };
 
     case CartActionTypes.INCREASE_PRODUCT_QUANTITY:
-      // Use the increaseItemAmount utility function to update the product quantity
-      const updatedProducts = increaseItemAmount(
-        state.products,
-        action.payload.id
-      );
-
       return {
         ...state,
-        products: updatedProducts,
+        products: state.products.map((product: CardProps) =>
+          product.id === action.payload
+            ? { ...product, amount: product.amount + 1 }
+            : product
+        ),
       };
-    // case CartActionTypes.INCREASE_PRODUCT_QUANTITY:
-    //   return {
-    //     ...state,
-    //     products: state.products.map((product: CardProps) =>
-    //       product.id === action.payload.id
-    //         ? { ...product, amount: product.amount + 1 }
-    //         : product
-    //     ),
-    // };
+
+    case CartActionTypes.DECREASE_PRODUCT_QUANTITY:
+      return {
+        ...state,
+        products: state.products.map((product: CardProps) => {
+          if (product.id === action.payload && product.amount > 1) {
+            return { ...product, amount: product.amount - 1 };
+          } else if (product.id === action.payload && product.amount === 1) {
+            toast.warning("Remova o item do carrinho");
+          }
+          return product;
+        }),
+      };
 
     default:
       return state;

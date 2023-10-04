@@ -38,12 +38,7 @@ export const CardTitle = styled.div`
   }
 `;
 
-interface ButtonProps {
-  isButton: boolean;
-  isSmall: boolean;
-}
-
-export const CardSelectAmount = styled.div<ButtonProps>`
+export const CardSelectAmount = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -52,7 +47,7 @@ export const CardSelectAmount = styled.div<ButtonProps>`
   border-radius: 6px;
   background-color: ${(props) => props.theme["base-400"]};
 
-  cursor: ${(props) => (props.isButton ? "pointer" : "")};
+  cursor: pointer;
 
   svg {
     color: ${(props) => props.theme["secondary-500"]};
@@ -60,8 +55,8 @@ export const CardSelectAmount = styled.div<ButtonProps>`
   }
 
   & > span {
-    font-size: ${(props) => (props.isSmall ? props.theme["font-xs"] : "")};
-    color: ${(props) => (props.isSmall ? props.theme["base-700"] : "")};
+    font-size: ${(props) => props.theme["font-xs"]};
+    color: ${(props) => props.theme["base-700"]};
   }
 `;
 

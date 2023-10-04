@@ -17,6 +17,8 @@ import { StatusProps } from "../interfaces";
 export function Success() {
   const { finalOrder, loading }: any = useContext(CartContext);
 
+  console.log(finalOrder, "aqqui");
+
   const status: StatusProps[] = [
     {
       icon: <MapPin size={24} />,

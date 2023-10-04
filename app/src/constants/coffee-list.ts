@@ -1,21 +1,21 @@
-import americano from "../../../assets/americano.png";
-import arabe from "../../../assets/arabe.png";
-import capuccino from "../../../assets/capuccino.png";
-import cubano from "../../../assets/cubano.png";
-import expressoTradicional from "../../../assets/Coffee.png";
-import expressoCreamy from "../../../assets/expressocreamy.png";
-import expressoGelado from "../../../assets/expressogelado.png";
-import havaiano from "../../../assets/havaiano.png";
-import hotchocolate from "../../../assets/hotchocolate.png";
-import irlandes from "../../../assets/irlandes.png";
-import latte from "../../../assets/latte.png";
-import moccacino from "../../../assets/moccacino.png";
-import macchiato from "../../../assets/macchiato.png";
-import cafeComLeite from "../../../assets/comLeite.png";
+import americano from "../assets/americano.png";
+import arabe from "../assets/arabe.png";
+import capuccino from "../assets/capuccino.png";
+import cubano from "../assets/cubano.png";
+import expressoTradicional from "../assets/Coffee.png";
+import expressoCreamy from "../assets/expressocreamy.png";
+import expressoGelado from "../assets/expressogelado.png";
+import havaiano from "../assets/havaiano.png";
+import hotchocolate from "../assets/hotchocolate.png";
+import irlandes from "../assets/irlandes.png";
+import latte from "../assets/latte.png";
+import moccacino from "../assets/moccacino.png";
+import macchiato from "../assets/macchiato.png";
+import cafeComLeite from "../assets/comLeite.png";
 import { v4 as uuidv4 } from "uuid";
-import { CardProps } from "../../../interfaces";
+import { CardProps } from "../interfaces";
 
-export const cardData: CardProps[] = [
+export const coffeeList: CardProps[] = [
   {
     id: uuidv4(),
     title: "Expresso Tradicional",

@@ -1,57 +1,42 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext } from "react";
-
-import { v4 as uuidv4 } from "uuid";
-
+import { useEffect, useState } from "react";
+// REDUX
+import { useDispatch, useSelector } from "react-redux";
 import {
-  Bank,
-  CreditCard,
-  CurrencyDollar,
-  MapPinLine,
-  Money,
-} from "phosphor-react";
+  fetchAddress,
+  updateAddressDetails,
+  updateAddressNumber,
+  updatePaymentMethod,
+} from "../../../redux/form/actions";
+
+// STYLES
 import { Card } from "../styles";
 import { CardBlock, CardPaymentMethod, PaymentButton } from "./styles";
-import { CartContext } from "../../../App";
-import { PaymentProps } from "../../../interfaces";
+import { CurrencyDollar, MapPinLine } from "phosphor-react";
+
+// CONSTANTS
+import { paymentMethodCards } from "../../../constants";
 
 export function FormCard() {
-  const {
-    addressNumber,
-    setAddressNumber,
-    addressDetails,
-    setAddressDetails,
-    dataCep,
-    fetchAddress,
-    setPaymentMethod,
-    checkedInput,
-    setCheckedInput,
-  } = useContext(CartContext);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [addressNumber, setAddressNumber] = useState("");
+  const [addressDetails, setAddressDetails] = useState("");
 
-  const paymentMethodCards: PaymentProps[] = [
-    {
-      id: uuidv4(),
-      icon: <CreditCard size={24} />,
-      label: "Cartão de Crédito",
-    },
-    {
-      id: uuidv4(),
-      icon: <Money size={24} />,
-      label: "Cartão de Débito",
-    },
-    {
-      id: uuidv4(),
-      icon: <Bank size={24} />,
-      label: "Dinheiro",
-    },
-  ];
+  const dispatch = useDispatch();
+  const { dataCep } = useSelector((state: any) => state.FormReducer);
+
+  useEffect(() => {
+    dispatch(updateAddressNumber(addressNumber));
+    dispatch(updateAddressDetails(addressDetails));
+    dispatch(updatePaymentMethod(paymentMethod));
+  }, [dispatch, dataCep, addressNumber, addressDetails, paymentMethod]);
 
   function handlePaymentMethod(item: any) {
     if (item) {
-      setCheckedInput(item.target.value);
-    } else {
-      return;
+      setPaymentMethod(item.target.value);
     }
+    return;
   }
 
   return (
@@ -74,14 +59,14 @@ export function FormCard() {
             name="cep"
             placeholder="CEP"
             required
-            onChange={({ target }) => fetchAddress(target.value)}
+            onChange={({ target }) => dispatch(fetchAddress(target.value))}
           />
 
           <input
             type="text"
             id="streetAddress"
             name="streetAddress"
-            value={dataCep.logradouro}
+            value={dataCep ? dataCep.logradouro : ""}
             placeholder="Rua"
             disabled
           />
@@ -113,7 +98,7 @@ export function FormCard() {
               type="text"
               id="neighbourhood"
               name="neighbourhood"
-              value={dataCep.bairro}
+              value={dataCep ? dataCep.bairro : ""}
               placeholder="Bairro"
               disabled
             />
@@ -121,7 +106,7 @@ export function FormCard() {
               type="text"
               id="city"
               name="city"
-              value={dataCep.localidade}
+              value={dataCep ? dataCep.localidade : ""}
               placeholder="Cidade"
               disabled
             />
@@ -129,7 +114,7 @@ export function FormCard() {
               type="text"
               id="state"
               name="state"
-              value={dataCep.uf}
+              value={dataCep ? dataCep.uf : ""}
               placeholder="UF"
               disabled
             />
@@ -150,17 +135,14 @@ export function FormCard() {
           {paymentMethodCards.map((item) => {
             return (
               <PaymentButton
-                className={checkedInput === item.label ? "isChecked" : ""}
+                className={paymentMethod === item.label ? "isChecked" : ""}
               >
                 {item.icon}
                 <input
                   key={item.label}
                   name="paymentMethod"
                   type="radio"
-                  onChange={(e: any) => {
-                    setPaymentMethod(item.label);
-                    handlePaymentMethod(e);
-                  }}
+                  onChange={(e) => handlePaymentMethod(e)}
                   value={item.label}
                 />
                 <span>{item.label}</span>

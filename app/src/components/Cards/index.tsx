@@ -1,31 +1,37 @@
 import { ShoppingCart } from "phosphor-react";
 import { Card, CardFooter, CardImage, CardTag, CardTitle } from "./styles";
 
-import { useContext } from "react";
-import { CartContext } from "../../App";
 import { CardProps } from "../../interfaces";
 import { QuantityBox } from "../QuantityBox";
 
 import { useDispatch } from "react-redux";
 import { addProductToCart } from "../../redux/cart/actions";
+import { coffeeList } from "../../constants";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function Cards() {
-  const { handleCart, catalogItems } = useContext(CartContext);
+  const [listOfItems, setListOfItems] = useState(coffeeList);
 
   const dispatch = useDispatch();
 
   const handleAddProductToCart = (product: any) => {
+    if (product.amount === 0) {
+      toast.warning("Adicione ao menos um item no carrinho!");
+      return;
+    }
+
     dispatch(addProductToCart(product));
   };
 
-  const allCards = catalogItems.map((card: CardProps) => {
+  const allCards = listOfItems.map((card: CardProps, index: number) => {
     return (
-      <Card key={card.id}>
+      <Card key={`${card.label}-${card.id}-${index}`}>
         <CardImage>
           <img src={card.image} />
         </CardImage>
 
-        <CardTag key={card.id}>
+        <CardTag key={`${card.label}-${card.id}-${index}`}>
           {Array.isArray(card.tag) && card.tag.length > 1 ? (
             card.tag.map((item, index) => (
               <div id="label">
@@ -49,7 +55,7 @@ export function Cards() {
             R$ <h2>{card.price}</h2>
           </span>
 
-          <QuantityBox item={card} />
+          <QuantityBox selectedProduct={card} setListOfItems={setListOfItems} />
 
           <div onClick={() => handleAddProductToCart(card)}>
             <ShoppingCart size={24} />

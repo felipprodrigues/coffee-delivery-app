@@ -2,30 +2,26 @@ import { ReactElement, ReactNode } from "react";
 
 export interface CartProps {
   // FUNCTIONS
-  handleCart: (item: any) => void;
-  removeItemFromCart: (item: any) => void;
+
   fetchAddress: (item: any) => void;
   setAddressNumber: React.Dispatch<React.SetStateAction<string>>;
   setAddressDetails: React.Dispatch<React.SetStateAction<string>>;
   setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
-  handleIncreaseAmount: (item: any) => void;
-  handleDecreaseAmount: (item: any) => void;
   handleOrder: (item?: any) => void;
   dispatch: React.Dispatch<React.SetStateAction<string[]>>;
   setFinalOrder: React.Dispatch<React.SetStateAction<OrderProps[]>>;
   setCheckedInput: React.Dispatch<React.SetStateAction<string>>;
-  setCatalogItems: React.Dispatch<React.SetStateAction<OrderProps[]>>;
+
   // STATES
-  cartTotalAmount: number;
-  catalogItems: CardProps[];
+  
   addressNumber: string;
   addressDetails: string;
   dataCep: AddressProps;
   loading: boolean;
   paymentMethod: string;
-  totalPrice: string;
+
   finalOrder: OrderProps[];
-  newOrder: OrderProps[];
+
   checkedInput: string;
 }
 
