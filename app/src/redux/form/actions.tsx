@@ -1,4 +1,8 @@
+import { ThunkAction } from "redux-thunk";
 import { FormActionTypes } from "./action-types";
+
+import rootReducer from "../root-reducer";
+import { AnyAction } from "redux";
 
 export const fetchAddressRequest = (cep: string) => ({
   type: FormActionTypes.FETCH_ADDRESS,
@@ -30,33 +34,35 @@ export const updatePaymentMethod = (method: string) => ({
   method,
 });
 
-export const fetchAddress = (cep: any) => {
-  return async (
-    dispatch: (arg0: {
-      type: FormActionTypes;
-      cep?: string;
-      response?: any;
-      error?: string;
-    }) => void
-  ) => {
-    if (cep.length === 8) {
+export const fetchAddress = (
+  cep: string
+): ThunkAction<void, typeof rootReducer, null, AnyAction> => {
+  return async (dispatch) => {
+    try {
+      // Dispatch the fetchAddressRequest action
       dispatch(fetchAddressRequest(cep));
 
-      try {
+      // Check if the CEP has the correct length (8 characters)
+      if (cep.length === 8) {
+        // Make a request to your backend or API function to fetch the address
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
 
         if (!response.ok) {
-          throw new Error("Resposta falhou!");
+          throw new Error("Failed to fetch address data");
         }
 
         const responseData = await response.json();
+
+        // Dispatch the fetchAddressSuccess action with the response data
         dispatch(fetchAddressSuccess(responseData));
-      } catch (error: any) {
-        console.error("Erro ao buscar cep:", error);
-        dispatch(fetchAddressFailure(error));
+      } else {
+        throw new Error("Invalid CEP format");
       }
-    } else {
-      dispatch(fetchAddressFailure(new Error("Formato de CEP inválido")));
+    } catch (error: any) {
+      console.error("Error fetching address:", error);
+
+      // Dispatch the fetchAddressFailure action with the error message
+      dispatch(fetchAddressFailure(error));
     }
   };
 };
