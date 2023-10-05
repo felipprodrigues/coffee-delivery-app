@@ -1,5 +1,4 @@
 import { CardProps } from "../../interfaces";
-import { increaseItemAmount } from "../../utils/increaseItemAmount";
 import { CartActionTypes } from "./action-types";
 
 export const addProductToCart = (payload: CardProps) => ({

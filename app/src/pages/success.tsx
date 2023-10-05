@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useSelector } from "react-redux";
+
 import { Main } from "../components/CheckoutCards/styles";
 import { Container } from "../styles/global";
-
 import SuccessIllustration from "../assets/successIllustrations.png";
 import {
   SuccessCard,
@@ -9,34 +10,13 @@ import {
   SuccessImageHolder,
   SuccessSteps,
 } from "../components/Success/styles";
-import { useContext } from "react";
-import { CurrencyDollar, MapPin, Timer } from "phosphor-react";
-import { CartContext } from "../App";
-import { StatusProps } from "../interfaces";
+
+import { successStatus } from "../constants";
 
 export function Success() {
-  const { finalOrder, loading }: any = useContext(CartContext);
-
-  console.log(finalOrder, "aqqui");
-
-  const status: StatusProps[] = [
-    {
-      icon: <MapPin size={24} />,
-      msg: "Entrega em ",
-      bgColor: "#8047F8",
-    },
-    {
-      icon: <Timer size={24} />,
-      msg: "Previsão de entrega",
-      status: "20 min - 30 min",
-      bgColor: "#dbac2c",
-    },
-    {
-      icon: <CurrencyDollar size={24} />,
-      msg: "Pagamento na entrega",
-      bgColor: "#c47f17",
-    },
-  ];
+  const { paymentMethod, address, neighbourhood, city, state } = useSelector(
+    (state: any) => state.OrderReducer.finalOrder
+  );
 
   return (
     <Container>
@@ -46,48 +26,47 @@ export function Success() {
             <h1>Uhu! Pedido Confirmado</h1>
             Agora é só aguardar que logo o café chegará até você
           </span>
-          {!loading ? (
-            <SuccessCard>
-              <div>
-                {status.map((item: any, index: number) => (
-                  <SuccessSteps color={item.bgColor}>
-                    <div>{item.icon}</div>
-                    {index === 0 ? (
-                      <div>
+          {/* {!loading ? ( */}
+          <SuccessCard>
+            <div>
+              {successStatus.map((item: any, index: number) => (
+                <SuccessSteps color={item.bgColor}>
+                  <div>{item.icon}</div>
+                  {index === 0 ? (
+                    <div>
+                      <span>
+                        {item.msg}
                         <span>
-                          {item.msg}
+                          <b>{address}</b>
+                        </span>
+                      </span>
+                      <span>
+                        {neighbourhood} - {city}, {state}
+                      </span>
+                    </div>
+                  ) : (
+                    <div>
+                      <span>{item.msg}</span>
+                      {index === 1 ? (
+                        <span>
                           <span>
-                            <b>{finalOrder?.address.logradouro}</b>
+                            <b>{item.status}</b>
                           </span>
                         </span>
+                      ) : (
                         <span>
-                          {finalOrder?.address.bairro} -{" "}
-                          {finalOrder?.address.cidade}, {finalOrder?.address.uf}
+                          <span>
+                            <b>{paymentMethod}</b>
+                          </span>
                         </span>
-                      </div>
-                    ) : (
-                      <div>
-                        <span>{item.msg}</span>
-                        {index === 1 ? (
-                          <span>
-                            <span>
-                              <b>{item.status}</b>
-                            </span>
-                          </span>
-                        ) : (
-                          <span>
-                            <span>
-                              <b>{finalOrder.metodoPagamento}</b>
-                            </span>
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </SuccessSteps>
-                ))}
-              </div>
-            </SuccessCard>
-          ) : null}
+                      )}
+                    </div>
+                  )}
+                </SuccessSteps>
+              ))}
+            </div>
+          </SuccessCard>
+          {/* ) : null} */}
         </SuccessHolder>
 
         <SuccessImageHolder>

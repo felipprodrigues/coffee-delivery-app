@@ -17,14 +17,17 @@ import { CurrencyDollar, MapPinLine } from "phosphor-react";
 
 // CONSTANTS
 import { paymentMethodCards } from "../../../constants";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
 export function FormCard() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [addressNumber, setAddressNumber] = useState("");
   const [addressDetails, setAddressDetails] = useState("");
 
-  const dispatch = useDispatch();
   const { dataCep } = useSelector((state: any) => state.FormReducer);
+
+  const dispatch: ThunkDispatch<any, null, AnyAction> = useDispatch();
 
   useEffect(() => {
     dispatch(updateAddressNumber(addressNumber));
@@ -37,6 +40,10 @@ export function FormCard() {
       setPaymentMethod(item.target.value);
     }
     return;
+  }
+
+  function handleFetchAddress(e: string) {
+    dispatch(fetchAddress(e));
   }
 
   return (
@@ -59,7 +66,7 @@ export function FormCard() {
             name="cep"
             placeholder="CEP"
             required
-            onChange={({ target }) => dispatch(fetchAddress(target.value))}
+            onChange={(e) => handleFetchAddress(e.target.value)}
           />
 
           <input
@@ -136,6 +143,7 @@ export function FormCard() {
             return (
               <PaymentButton
                 className={paymentMethod === item.label ? "isChecked" : ""}
+                key={item.id}
               >
                 {item.icon}
                 <input
