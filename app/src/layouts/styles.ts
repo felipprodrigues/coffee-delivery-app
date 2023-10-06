@@ -13,10 +13,15 @@ export const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;
 
+  max-width: calc(100% - 3rem);
+
+  @media (min-width: 768px) {
+    max-width: calc(100% - 6rem);
+  }
+
   @media (min-width: 1024px) {
     max-width: calc(100% - 20rem);
   }
-  max-width: calc(100% - 6rem);
 
   div#footer {
     padding: 2rem;

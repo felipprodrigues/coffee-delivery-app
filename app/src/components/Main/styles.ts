@@ -16,7 +16,9 @@ export const MainHolder = styled.div`
 
   grid-template-columns: 1fr;
 
-  @media (min-width: 769px) {
+  justify-items: center;
+
+  @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 

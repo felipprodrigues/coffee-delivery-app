@@ -8,6 +8,7 @@ export const CardBlock = styled.div`
   border-radius: 6px;
   padding: 2.5rem;
 
+
   div#blockData {
     display: flex;
     gap: 1rem;
