@@ -1,9 +1,14 @@
 import styled from "styled-components";
 
 export const Main = styled.main`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-gap: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 2rem;
+  }
 `;
 
 export const Card = styled.div`

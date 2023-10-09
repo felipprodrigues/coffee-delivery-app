@@ -72,4 +72,18 @@ export const SuccessSteps = styled.div`
 export const SuccessImageHolder = styled.div`
   display: flex;
   align-items: flex-end;
+
+  justify-content: center;
+
+  @media (min-width: 1024px) {
+    justify-content: unset;
+  }
+
+  img {
+    max-width: 100%;
+
+    @media (min-width: 1024px) {
+      max-width: unset;
+    }
+  }
 `;

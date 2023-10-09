@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   HeaderContainer,
   HeaderLabel,
@@ -23,8 +24,8 @@ export function Header() {
         <img src={Logo} />
       </NavLink>
 
-      {location.pathname !== "/success" ? (
-        <div>
+      <div>
+        {location.pathname === "/checkout" && (
           <HeaderLabel>
             <MapPin size={24} />
             {!dataCep ? null : (
@@ -34,7 +35,9 @@ export function Header() {
               </span>
             )}
           </HeaderLabel>
+        )}
 
+        {location.pathname !== "/success" && (
           <NavLink to="/checkout" title="Checkout">
             <HeaderLabel>
               <ShoppingCart size={24} />
@@ -43,8 +46,8 @@ export function Header() {
               </HeaderShoppingCartCounter>
             </HeaderLabel>
           </NavLink>
-        </div>
-      ) : null}
+        )}
+      </div>
     </HeaderContainer>
   );
 }

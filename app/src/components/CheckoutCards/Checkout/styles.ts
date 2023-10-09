@@ -14,6 +14,12 @@ export const CardCheckout = styled.div`
     align-items: center;
     padding: 2rem 0;
 
+    flex-direction: column;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+
     img {
       width: 60px;
       height: 60px;
@@ -36,6 +42,11 @@ export const CardQuantityHolder = styled.div`
 
   & > span {
     margin-bottom: 1rem;
+    text-align: center;
+
+    @media (min-width: 1024px) {
+      text-align: left;
+    }
   }
 
   div {

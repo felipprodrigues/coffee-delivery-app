@@ -8,9 +8,14 @@ export const BannerContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr auto;
   }
+
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+
+  & > div > img {
+    max-width: 100%;
+  }
 `;
 
 export const BannerTags = styled.div`
