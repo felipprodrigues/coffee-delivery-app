@@ -6,8 +6,12 @@ export const CardBlock = styled.div`
 
   background-color: ${(props) => props.theme["base-200"]};
   border-radius: 6px;
-  padding: 2.5rem;
 
+  padding: 1rem;
+
+  @media (min-width: 1024px) {
+    padding: 2.5rem;
+  }
 
   div#blockData {
     display: flex;
@@ -38,8 +42,13 @@ export const CardBlock = styled.div`
   }
 
   form {
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: 1024px) {
+      display: grid;
+    }
     padding: 2rem 0 0;
-    display: grid;
 
     grid-gap: 1rem;
 
@@ -53,7 +62,9 @@ export const CardBlock = styled.div`
     }
 
     input:first-of-type {
-      max-width: 200px;
+      @media (min-width: 1024px) {
+        max-width: 200px;
+      }
       width: 100%;
     }
 
@@ -63,20 +74,37 @@ export const CardBlock = styled.div`
     }
 
     div:first-of-type {
-      grid-template-columns: 200px auto;
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 1024px) {
+        grid-template-columns: 200px auto;
+      }
     }
 
     div:last-of-type {
-      grid-template-columns: 200px auto 60px;
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 1024px) {
+        grid-template-columns: 200px auto 60px;
+      }
     }
   }
 `;
 
 export const CardPaymentMethod = styled.div`
-  display: grid;
-  padding: 2rem 0 0;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
+  padding-top: 2rem;
+
+  @media (min-width: 1024px) {
+    display: grid;
+    padding: 2rem 0 0;
+    grid-template-columns: repeat(3, 1fr);
+    /* gap: 1rem; */
+  }
 `;
 
 export const PaymentButton = styled.label`

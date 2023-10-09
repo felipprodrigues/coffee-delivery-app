@@ -7,7 +7,12 @@ export const HeaderContainer = styled.header`
 
   & > div {
     display: flex;
-    gap: 1.5rem;
+
+    gap: 0.5rem;
+
+    @media (min-width: 768px) {
+      gap: 1.5rem;
+    }
   }
 
   & > a > img {
