@@ -1,6 +1,5 @@
 import { MainContainer, MainHolder } from "./styles";
 import { Cards } from "../Cards";
-import { Sidepanel } from "../Sidepanel";
 
 export function Main() {
   return (

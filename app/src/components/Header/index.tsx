@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  HeaderCart,
   HeaderContainer,
   HeaderLabel,
   HeaderShoppingCartCounter,
-  HeaderSidepanel,
 } from "./styles";
 
 import Logo from "../../assets/Logo.png";
