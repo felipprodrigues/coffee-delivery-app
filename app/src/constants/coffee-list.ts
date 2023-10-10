@@ -147,4 +147,13 @@ export const coffeeList: CardProps[] = [
     price: "9,90",
     amount: 0,
   },
+  {
+    id: uuidv4(),
+    title: "qlquer coisa",
+    label: "wjerwirjegirejgorekg",
+    tag: ["Especial", "Alcoólico"],
+    image: irlandes,
+    price: "999,90",
+    amount: 0,
+  },
 ];
