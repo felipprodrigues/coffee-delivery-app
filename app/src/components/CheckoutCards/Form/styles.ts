@@ -78,6 +78,7 @@ export const CardBlock = styled.div`
       flex-direction: column;
 
       @media (min-width: 1024px) {
+        display: grid;
         grid-template-columns: 200px auto;
       }
     }
@@ -87,6 +88,7 @@ export const CardBlock = styled.div`
       flex-direction: column;
 
       @media (min-width: 1024px) {
+        display: grid;
         grid-template-columns: 200px auto 60px;
       }
     }
